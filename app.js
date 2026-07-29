@@ -210,16 +210,45 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            document.getElementById('checkout-overlay').classList.remove('hidden');
-            
-            setTimeout(() => {
-                document.getElementById('checkout-loading').classList.add('hidden');
-                document.getElementById('checkout-success').classList.remove('hidden');
-                
-                cart = [];
-                saveCart();
-                updateCartUI();
-            }, 2500);
+            // Gom dữ liệu đơn hàng chuẩn bị gửi lên Azure Functions
+            const orderData = {
+                orderId: "ORD-" + Math.floor(Math.random() * 100000),
+                items: cart,
+                total: document.getElementById('checkout-final-total') ? document.getElementById('checkout-final-total').innerText : "$0.00",
+                timestamp: new Date().toISOString()
+            };
+
+            const overlay = document.getElementById('checkout-overlay');
+            const loading = document.getElementById('checkout-loading');
+            const success = document.getElementById('checkout-success');
+
+            if(overlay) overlay.classList.remove('hidden');
+
+            // Gọi API Azure Functions để đẩy vào Table Storage
+            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/SubmitOrder', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            })
+            .then(response => {
+                setTimeout(() => {
+                    if(loading) loading.classList.add('hidden');
+                    if(success) success.classList.remove('hidden');
+                    cart = [];
+                    saveCart();
+                    updateCartUI();
+                }, 2000);
+            })
+            .catch(error => {
+                console.error('Lỗi lưu đơn hàng vào Azure:', error);
+                // Vẫn hiện hoàn tất thành công cho giao diện demo
+                setTimeout(() => {
+                    if(loading) loading.classList.add('hidden');
+                    if(success) success.classList.remove('hidden');
+                    cart = [];
+                    saveCart();
+                    updateCartUI();
+                }, 2000);
+            });
         });
     }
-});
