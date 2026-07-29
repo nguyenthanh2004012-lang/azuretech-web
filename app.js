@@ -218,13 +218,15 @@ document.addEventListener('DOMContentLoaded', () => {
             if(overlay) overlay.classList.remove('hidden');
             if(loading) loading.classList.remove('hidden');
 
-            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/SubmitOrder', {
+           fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/SubmitOrder', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
             })
-            .then(response => response.json())
-            .then(result => {
+            .then(response => response.text())
+            .then(text => {
+                let result = {};
+                try { result = text ? JSON.parse(text) : {}; } catch (e) {}
                 setTimeout(() => {
                     if(loading) loading.classList.add('hidden');
                     if(success) success.classList.remove('hidden');
@@ -233,16 +235,3 @@ document.addEventListener('DOMContentLoaded', () => {
                     updateCartUI();
                 }, 1500);
             })
-            .catch(error => {
-                console.error('Lỗi lưu đơn hàng vào Azure:', error);
-                setTimeout(() => {
-                    if(loading) loading.classList.add('hidden');
-                    if(success) success.classList.remove('hidden');
-                    cart = [];
-                    saveCart();
-                    updateCartUI();
-                }, 1500);
-            });
-        });
-    }
-});
