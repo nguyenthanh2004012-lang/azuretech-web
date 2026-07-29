@@ -223,10 +223,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
             })
-            .then(response => response.text())
-            .then(text => {
-                let result = {};
-                try { result = text ? JSON.parse(text) : {}; } catch (e) {}
+            .then(response => response.json())
+            .then(result => {
                 setTimeout(() => {
                     if(loading) loading.classList.add('hidden');
                     if(success) success.classList.remove('hidden');
