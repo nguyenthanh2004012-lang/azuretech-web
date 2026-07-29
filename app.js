@@ -299,7 +299,7 @@ if (btnTts && inputTts && statusTts && audioTts) {
         }
 
         statusTts.innerText = "Đang nhờ Azure tạo giọng nói...";
-        btnTts.disabled = true; // Khóa nút tránh bấm nhiều lần
+        btnTts.disabled = true;
 
         fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/TextToSpeech', {
             method: 'POST',
@@ -309,17 +309,30 @@ if (btnTts && inputTts && statusTts && audioTts) {
         .then(response => response.json())
         .then(data => {
             btnTts.disabled = false;
-            if (data.success) {
+            if (data.success && data.audioBase64) {
                 statusTts.innerText = "Đang phát âm thanh 🔊...";
-                // Gắn luồng nhạc vào cái loa ẩn và tự động bật
-                audioTts.src = "data:audio/mp3;base64," + data.audioBase64;
-                audioTts.play();
+                
+                // Chuyển đổi mã base64 thành Blob an toàn để trình duyệt không bị lỗi NotSupportedError
+                const binaryString = atob(data.audioBase64);
+                const len = binaryString.length;
+                const bytes = new Uint8Array(len);
+                for (let i = 0; i < len; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+                const blob = new Blob([bytes], { type: 'audio/mp3' });
+                
+                // Gắn Blob URL vào thẻ phát nhạc
+                audioTts.src = URL.createObjectURL(blob);
+                audioTts.play().catch(e => {
+                    console.error("Lỗi phát nhạc:", e);
+                    statusTts.innerText = "Trình duyệt chặn tự động phát âm thanh!";
+                });
                 
                 audioTts.onended = () => {
                     statusTts.innerText = "Đã phát xong!";
                 };
             } else {
-                statusTts.innerText = "Lỗi: " + data.message;
+                statusTts.innerText = "Lỗi: " + (data.message || "Không nhận được dữ liệu âm thanh");
             }
         })
         .catch(error => {
