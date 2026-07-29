@@ -306,34 +306,23 @@ if (btnTts && inputTts && statusTts && audioTts) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: textToSpeak })
         })
-        .then(response => response.json())
-        .then(data => {
+        .then(response => {
+            if (!response.ok) throw new Error("Lỗi kết nối server");
+            return response.blob(); // Nhận trực tiếp tệp âm thanh dạng Blob
+        })
+        .then(blob => {
             btnTts.disabled = false;
-            if (data.success && data.audioBase64) {
-                statusTts.innerText = "Đang phát âm thanh 🔊...";
-                
-                // Chuyển đổi mã base64 thành Blob an toàn để trình duyệt không bị lỗi NotSupportedError
-                const binaryString = atob(data.audioBase64);
-                const len = binaryString.length;
-                const bytes = new Uint8Array(len);
-                for (let i = 0; i < len; i++) {
-                    bytes[i] = binaryString.charCodeAt(i);
-                }
-                const blob = new Blob([bytes], { type: 'audio/mp3' });
-                
-                // Gắn Blob URL vào thẻ phát nhạc
-                audioTts.src = URL.createObjectURL(blob);
-                audioTts.play().catch(e => {
-                    console.error("Lỗi phát nhạc:", e);
-                    statusTts.innerText = "Trình duyệt chặn tự động phát âm thanh!";
-                });
-                
-                audioTts.onended = () => {
-                    statusTts.innerText = "Đã phát xong!";
-                };
-            } else {
-                statusTts.innerText = "Lỗi: " + (data.message || "Không nhận được dữ liệu âm thanh");
-            }
+            statusTts.innerText = "Đang phát âm thanh 🔊...";
+            
+            audioTts.src = URL.createObjectURL(blob);
+            audioTts.play().catch(e => {
+                console.error("Lỗi phát nhạc:", e);
+                statusTts.innerText = "Trình duyệt chặn tự động phát!";
+            });
+            
+            audioTts.onended = () => {
+                statusTts.innerText = "Đã phát xong!";
+            };
         })
         .catch(error => {
             btnTts.disabled = false;
