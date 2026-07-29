@@ -306,23 +306,27 @@ if (btnTts && inputTts && statusTts && audioTts) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text: textToSpeak })
         })
-        .then(response => {
-            if (!response.ok) throw new Error("Lỗi kết nối server");
-            return response.blob(); // Nhận trực tiếp tệp âm thanh dạng Blob
-        })
-        .then(blob => {
+        .then(response => response.json())
+        .then(data => {
             btnTts.disabled = false;
-            statusTts.innerText = "Đang phát âm thanh 🔊...";
-            
-            audioTts.src = URL.createObjectURL(blob);
-            audioTts.play().catch(e => {
-                console.error("Lỗi phát nhạc:", e);
-                statusTts.innerText = "Trình duyệt chặn tự động phát!";
-            });
-            
-            audioTts.onended = () => {
-                statusTts.innerText = "Đã phát xong!";
-            };
+            if (data.success && data.audioBase64) {
+                statusTts.innerText = "Đang phát âm thanh 🔊...";
+                
+                // Nạp trực tiếp dạng chuẩn Data URI để trình duyệt đọc liền mạch không qua phân đoạn rườm rà
+                audioTts.src = "data:audio/mp3;base64," + data.audioBase64;
+                audioTts.load();
+                
+                audioTts.play().catch(e => {
+                    console.error("Lỗi phát nhạc:", e);
+                    statusTts.innerText = "Trình duyệt chặn tự động phát!";
+                });
+                
+                audioTts.onended = () => {
+                    statusTts.innerText = "Đã phát xong!";
+                };
+            } else {
+                statusTts.innerText = "Lỗi: " + (data.message || "Không có dữ liệu âm thanh");
+            }
         })
         .catch(error => {
             btnTts.disabled = false;
