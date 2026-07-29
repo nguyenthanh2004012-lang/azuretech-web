@@ -245,4 +245,40 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-});
+});// === CHỨC NĂNG DỊCH THUẬT AZURE ===
+    const btnTranslate = document.getElementById('ai-translate-btn');
+    const inputTranslate = document.getElementById('ai-translate-input');
+    const resultTranslate = document.getElementById('ai-translate-result');
+
+    if (btnTranslate && inputTranslate && resultTranslate) {
+        btnTranslate.addEventListener('click', () => {
+            const textToTranslate = inputTranslate.value.trim();
+            if (!textToTranslate) {
+                alert("Bạn chưa nhập chữ!");
+                return;
+            }
+
+            resultTranslate.innerText = "Đang nhờ Azure dịch...";
+
+            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/TranslateText', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    text: textToTranslate,
+                    to: "vi" // Dịch sang tiếng Việt
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    resultTranslate.innerText = "Kết quả: " + data.translated;
+                } else {
+                    resultTranslate.innerText = "Lỗi: " + data.message;
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi gọi API Dịch:", error);
+                resultTranslate.innerText = "Lỗi kết nối đến Azure!";
+            });
+        });
+    }
