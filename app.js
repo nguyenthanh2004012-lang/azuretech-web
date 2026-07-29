@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- LƯU TRỮ VÀ GIAO DIỆN GIỎ HÀNG ---
     let cart = JSON.parse(localStorage.getItem('azureTechCart')) || [];
     
     const cartToggle = document.getElementById('cart-toggle');
@@ -12,7 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const toast = document.getElementById('toast');
     const navbar = document.querySelector('.navbar');
 
-    // SCROLL NAVBAR EFFECT
     window.addEventListener('scroll', () => {
         if(window.scrollY > 50) {
             navbar.classList.add('scrolled');
@@ -21,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // CÁC HIỆU ỨNG REVEAL KHI CUỘN CHUỘT
     const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if(entry.isIntersecting) {
@@ -136,7 +133,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     updateCartUI();
 
-    // --- GỌI API AZURE FUNCTIONS CHO PHẦN GỢI Ý AI ---
     const aiProductsContainer = document.getElementById('ai-products');
     const aiLoading = document.getElementById('ai-loading');
     const btnRefreshAi = document.getElementById('refresh-ai');
@@ -148,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
         aiProductsContainer.classList.add('hidden');
         if(aiLoading) aiLoading.classList.remove('hidden');
 
-        fetch('https://api-truong-2026-.southeastasia-01.azurewebsites.net/api/GetAIRecommendations')
+        fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/GetAIRecommendations')
             .then(response => response.json())
             .then(data => {
                 if(aiLoading) aiLoading.classList.add('hidden');
@@ -200,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.fetchAIRecommendations();
     }
 
-    // --- CHECKOUT LOGIC (GỬI ĐƠN HÀNG VỀ TABLE STORAGE) ---
     const btnSubmitOrder = document.getElementById('btn-submit-order');
     if(btnSubmitOrder) {
         btnSubmitOrder.addEventListener('click', () => {
@@ -223,13 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if(overlay) overlay.classList.remove('hidden');
             if(loading) loading.classList.remove('hidden');
 
-            // Đúng endpoint SubmitOrder để đẩy dữ liệu xuống bảng UserLogs
-            fetch('/api/SubmitOrder', {
+            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/SubmitOrder', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
-            })
-            .then(response => response.json())
             })
             .then(response => response.json())
             .then(result => {
