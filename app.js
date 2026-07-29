@@ -246,6 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });// === CHỨC NĂNG DỊCH THUẬT AZURE ===
+window.addEventListener('DOMContentLoaded', () => {
     const btnTranslate = document.getElementById('ai-translate-btn');
     const inputTranslate = document.getElementById('ai-translate-input');
     const resultTranslate = document.getElementById('ai-translate-result');
@@ -282,3 +283,4 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+});
