@@ -146,13 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         aiProductsContainer.innerHTML = '';
         aiProductsContainer.classList.add('hidden');
-        aiLoading.classList.remove('hidden');
+        if(aiLoading) aiLoading.classList.remove('hidden');
 
-        // Gọi trực tiếp API Serverless trên Azure
-        fetch('fetch('https:'//api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/SubmitOrder', {')
+        // Đúng endpoint lấy gợi ý sản phẩm AI
+        fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/GetAIRecommendations')
             .then(response => response.json())
             .then(data => {
-                aiLoading.classList.add('hidden');
+                if(aiLoading) aiLoading.classList.add('hidden');
                 aiProductsContainer.classList.remove('hidden');
 
                 const shuffled = [...data].sort(() => 0.5 - Math.random());
@@ -192,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 console.error('Lỗi khi gọi Azure API:', error);
-                aiLoading.innerHTML = '<p>Không thể kết nối đến Azure Functions API!</p>';
+                if(aiLoading) aiLoading.innerHTML = '<p>Không thể kết nối đến Azure Functions API!</p>';
             });
     }
 
@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.fetchAIRecommendations();
     }
 
-    // --- CHECKOUT LOGIC ---
+    // --- CHECKOUT LOGIC (GỬI ĐƠN HÀNG VỀ TABLE STORAGE) ---
     const btnSubmitOrder = document.getElementById('btn-submit-order');
     if(btnSubmitOrder) {
         btnSubmitOrder.addEventListener('click', () => {
@@ -210,7 +210,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Gom dữ liệu đơn hàng chuẩn bị gửi lên Azure Functions
             const orderData = {
                 orderId: "ORD-" + Math.floor(Math.random() * 100000),
                 items: cart,
@@ -223,9 +222,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const success = document.getElementById('checkout-success');
 
             if(overlay) overlay.classList.remove('hidden');
+            if(loading) loading.classList.remove('hidden');
 
-            // Gọi API Azure Functions để đẩy vào Table Storage
-            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/GetAIRecommendations', {
+            // Đúng endpoint SubmitOrder để đẩy dữ liệu xuống bảng UserLogs
+            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/SubmitOrder', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
@@ -241,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .catch(error => {
                 console.error('Lỗi lưu đơn hàng vào Azure:', error);
-                // Vẫn hiện hoàn tất thành công cho giao diện demo
                 setTimeout(() => {
                     if(loading) loading.classList.add('hidden');
                     if(success) success.classList.remove('hidden');
@@ -252,3 +251,4 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+});
