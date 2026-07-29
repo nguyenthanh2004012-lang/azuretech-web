@@ -148,7 +148,6 @@ document.addEventListener('DOMContentLoaded', () => {
         aiProductsContainer.classList.add('hidden');
         if(aiLoading) aiLoading.classList.remove('hidden');
 
-        // Đúng endpoint lấy gợi ý sản phẩm AI
         fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/GetAIRecommendations')
             .then(response => response.json())
             .then(data => {
@@ -224,20 +223,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if(overlay) overlay.classList.remove('hidden');
             if(loading) loading.classList.remove('hidden');
 
-            // Đúng endpoint SubmitOrder để đẩy dữ liệu xuống bảng UserLogs
             fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/SubmitOrder', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
             })
-            .then(response => {
+            .then(response => response.json())
+            .then(result => {
                 setTimeout(() => {
                     if(loading) loading.classList.add('hidden');
                     if(success) success.classList.remove('hidden');
                     cart = [];
                     saveCart();
                     updateCartUI();
-                }, 2000);
+                }, 1500);
             })
             .catch(error => {
                 console.error('Lỗi lưu đơn hàng vào Azure:', error);
@@ -247,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     cart = [];
                     saveCart();
                     updateCartUI();
-                }, 2000);
+                }, 1500);
             });
         });
     }
