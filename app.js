@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         aiProductsContainer.classList.add('hidden');
         if(aiLoading) aiLoading.classList.remove('hidden');
 
-        fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/GetAIRecommendations')
+        fetch('https://api-truong-2026-.southeastasia-01.azurewebsites.net/api/GetAIRecommendations')
             .then(response => response.json())
             .then(data => {
                 if(aiLoading) aiLoading.classList.add('hidden');
@@ -223,10 +223,13 @@ document.addEventListener('DOMContentLoaded', () => {
             if(overlay) overlay.classList.remove('hidden');
             if(loading) loading.classList.remove('hidden');
 
-            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/SubmitOrder', {
+            f// Đúng endpoint SubmitOrder để đẩy dữ liệu xuống bảng UserLogs
+            fetch('/api/SubmitOrder', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
+            })
+            .then(response => response.json())
             })
             .then(response => response.json())
             .then(result => {
