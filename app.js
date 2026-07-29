@@ -225,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(overlay) overlay.classList.remove('hidden');
 
             // Gọi API Azure Functions để đẩy vào Table Storage
-            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/SubmitOrder', {
+            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/GetAIRecommendations', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(orderData)
