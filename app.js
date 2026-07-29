@@ -284,3 +284,48 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// === CHỨC NĂNG TEXT TO SPEECH (ĐỌC VĂN BẢN) ===
+const btnTts = document.getElementById('ai-tts-btn');
+const inputTts = document.getElementById('ai-tts-input');
+const statusTts = document.getElementById('ai-tts-status');
+const audioTts = document.getElementById('ai-tts-audio');
+
+if (btnTts && inputTts && statusTts && audioTts) {
+    btnTts.addEventListener('click', () => {
+        const textToSpeak = inputTts.value.trim();
+        if (!textToSpeak) {
+            alert("Bạn chưa nhập chữ!");
+            return;
+        }
+
+        statusTts.innerText = "Đang nhờ Azure tạo giọng nói...";
+        btnTts.disabled = true; // Khóa nút tránh bấm nhiều lần
+
+        fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/TextToSpeech', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: textToSpeak })
+        })
+        .then(response => response.json())
+        .then(data => {
+            btnTts.disabled = false;
+            if (data.success) {
+                statusTts.innerText = "Đang phát âm thanh 🔊...";
+                // Gắn luồng nhạc vào cái loa ẩn và tự động bật
+                audioTts.src = "data:audio/mp3;base64," + data.audioBase64;
+                audioTts.play();
+                
+                audioTts.onended = () => {
+                    statusTts.innerText = "Đã phát xong!";
+                };
+            } else {
+                statusTts.innerText = "Lỗi: " + data.message;
+            }
+        })
+        .catch(error => {
+            btnTts.disabled = false;
+            console.error("Lỗi API Giọng nói:", error);
+            statusTts.innerText = "Lỗi kết nối đến Azure!";
+        });
+    });
+}
