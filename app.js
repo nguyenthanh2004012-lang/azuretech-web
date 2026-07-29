@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         aiLoading.classList.remove('hidden');
 
         // Gọi trực tiếp API Serverless trên Azure
-        fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/GetAIRecommendations')
+        fetch('fetch('https:'//api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/SubmitOrder', {')
             .then(response => response.json())
             .then(data => {
                 aiLoading.classList.add('hidden');
