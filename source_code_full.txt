@@ -1,0 +1,1335 @@
+﻿=========================================
+FILE: index.html
+=========================================
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AzureTech - Cửa Hàng Điện Tử Cao Cấp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-cloud"></i>
+                <span>AzureTech</span>
+            </a>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Tìm kiếm sản phẩm...">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="index.html" class="active">Trang Chủ</a>
+                <a href="products.html">Sản Phẩm</a>
+                <div class="cart-icon" id="cart-toggle">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </div>
+                <div class="user-menu">
+                    <a href="login.html"><img src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" style="border-radius:50%" alt="Avatar"></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Giỏ Hàng Của Bạn</h2>
+            <button id="close-cart"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <p class="empty-cart-msg">Giỏ hàng đang trống.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="total">
+                <span>Tổng tiền:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <a href="checkout.html" class="btn-checkout text-center" style="display:block; text-decoration:none;">Thanh Toán Ngay</a>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cart-overlay"></div>
+
+    <!-- Hero Section -->
+    <section class="hero" style="margin-top: 40px;">
+        <div class="hero-content">
+            <h1>Công nghệ vượt trội,<br>Trải nghiệm đỉnh cao.</h1>
+            <p>Khám phá hệ sinh thái thiết bị điện tử mới nhất, được cá nhân hóa hoàn toàn cho bạn thông qua AI.</p>
+            <a href="products.html" class="btn-primary">Mua Sắm Ngay <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="hero-image" style="background: rgba(255,255,255,0.1); border-radius: 50%; padding: 20px;">
+            <img src="img/hero.svg" alt="Tech setup">
+        </div>
+    </section>
+
+    <!-- AI Recommendation Section -->
+    <section class="section container ai-section">
+        <div class="section-header">
+            <div>
+                <h2 class="gradient-text"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Gợi Ý Nhanh</h2>
+                <p>Azure Machine Learning phân tích real-time từ giỏ hàng hiện tại của bạn.</p>
+            </div>
+            <button id="refresh-ai" class="btn-outline"><i class="fa-solid fa-rotate-right"></i> Tải lại Gợi ý</button>
+        </div>
+        
+        <div class="loading-state hidden" id="ai-loading">
+            <div class="spinner"></div>
+            <p>Azure ML Endpoint đang tính toán...</p>
+        </div>
+
+        <div class="product-grid" id="ai-products">
+            <!-- Injected by JS -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2><i class="fa-solid fa-cloud"></i> AzureTech</h2>
+                <p>Nền tảng thương mại điện tử hiện đại, vận hành 100% trên kiến trúc Đám mây.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AzureTech Store. Demo for Cloud Computing Project.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">Đã thêm vào giỏ hàng!</div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+
+
+=========================================
+FILE: products.html
+=========================================
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sản Phẩm - AzureTech Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .product-img { background: transparent; display:flex; align-items:center; justify-content:center; padding: 20px;}
+        .product-img img { object-fit: contain;}
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-cloud"></i>
+                <span>AzureTech</span>
+            </a>
+            <div class="search-bar">
+                <input type="text" placeholder="Tìm kiếm sản phẩm...">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Trang Chủ</a>
+                <a href="products.html" class="active">Sản Phẩm</a>
+                <div class="cart-icon" id="cart-toggle">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </div>
+                <div class="user-menu">
+                    <a href="login.html"><img src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" style="border-radius:50%" alt="Avatar"></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Giỏ Hàng Của Bạn</h2>
+            <button id="close-cart"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items"></div>
+        <div class="cart-footer">
+            <div class="total">
+                <span>Tổng tiền:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <a href="checkout.html" class="btn-checkout text-center" style="display:block; text-decoration:none;">Thanh Toán Ngay</a>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cart-overlay"></div>
+
+    <!-- Main Products Section -->
+    <section class="section container" style="margin-top: 40px;">
+        <div class="section-header reveal">
+            <h2>🔥 Toàn Bộ Sản Phẩm</h2>
+            <div class="categories">
+                <span class="active">Tất cả</span>
+                <span>Điện thoại</span>
+                <span>Laptop</span>
+                <span>Phụ kiện</span>
+            </div>
+        </div>
+        
+        <div class="product-grid">
+            <!-- Product 1 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/macbook.svg" alt="Macbook"></div>
+                <div class="product-info">
+                    <p class="category">Laptop</p>
+                    <h3>Apple MacBook Pro 14" (M3)</h3>
+                    <div class="price-row">
+                        <span class="price">$1,999.00</span>
+                        <button class="btn-add-cart" data-name="MacBook Pro 14" data-price="1999.00" data-img="img/macbook.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/dell.svg" alt="Dell XPS"></div>
+                <div class="product-info">
+                    <p class="category">Laptop</p>
+                    <h3>Dell XPS 15 (2024)</h3>
+                    <div class="price-row">
+                        <span class="price">$1,750.00</span>
+                        <button class="btn-add-cart" data-name="Dell XPS 15" data-price="1750.00" data-img="img/dell.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/iphone.svg" alt="Phone"></div>
+                <div class="product-info">
+                    <p class="category">Điện thoại</p>
+                    <h3>iPhone 15 Pro Max 256GB</h3>
+                    <div class="price-row">
+                        <span class="price">$1,199.00</span>
+                        <button class="btn-add-cart" data-name="iPhone 15 Pro Max" data-price="1199.00" data-img="img/iphone.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/headphones.svg" alt="Headphone"></div>
+                <div class="product-info">
+                    <p class="category">Phụ kiện</p>
+                    <h3>Tai nghe Sony WH-1000XM5</h3>
+                    <div class="price-row">
+                        <span class="price">$349.99</span>
+                        <button class="btn-add-cart" data-name="Sony WH-1000XM5" data-price="349.99" data-img="img/headphones.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 5 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/watch.svg" alt="Watch"></div>
+                <div class="product-info">
+                    <p class="category">Phụ kiện</p>
+                    <h3>Apple Watch Ultra 2</h3>
+                    <div class="price-row">
+                        <span class="price">$799.00</span>
+                        <button class="btn-add-cart" data-name="Apple Watch Ultra 2" data-price="799.00" data-img="img/watch.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 6 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/charger.svg" alt="Charger"></div>
+                <div class="product-info">
+                    <p class="category">Phụ kiện</p>
+                    <h3>Sạc nhanh GaN 100W</h3>
+                    <div class="price-row">
+                        <span class="price">$59.00</span>
+                        <button class="btn-add-cart" data-name="Sạc nhanh GaN 100W" data-price="59.00" data-img="img/charger.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer reveal">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2><i class="fa-solid fa-cloud"></i> AzureTech</h2>
+                <p>Nền tảng thương mại điện tử hiện đại, vận hành 100% trên kiến trúc Đám mây.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">Đã thêm vào giỏ hàng!</div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+
+
+=========================================
+FILE: checkout.html
+=========================================
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán - AzureTech Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-cloud"></i>
+                <span>AzureTech</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Trang Chủ</a>
+                <a href="products.html">Sản Phẩm</a>
+                <div class="user-menu">
+                    <a href="login.html"><img src="https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff" alt="Avatar"></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-sidebar" id="cart-sidebar" style="display:none;"></div>
+
+    <section class="section container checkout-page">
+        <div class="section-header">
+            <h2>Thanh Toán Đơn Hàng</h2>
+            <p>Xử lý qua cổng thanh toán bảo mật bằng Azure Key Vault.</p>
+        </div>
+
+        <div class="checkout-grid">
+            <!-- Form thông tin giao hàng -->
+            <div class="checkout-form">
+                <h3><i class="fa-solid fa-location-dot"></i> Thông tin giao hàng</h3>
+                <div class="form-group">
+                    <label>Họ và Tên</label>
+                    <input type="text" placeholder="Nhập họ và tên...">
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="tel" placeholder="Nhập số điện thoại...">
+                </div>
+                <div class="form-group">
+                    <label>Địa chỉ nhận hàng</label>
+                    <input type="text" placeholder="Số nhà, tên đường, phường/xã, quận/huyện...">
+                </div>
+
+                <h3 style="margin-top: 30px;"><i class="fa-regular fa-credit-card"></i> Phương thức thanh toán</h3>
+                <div class="payment-methods">
+                    <label class="payment-option">
+                        <input type="radio" name="payment" checked>
+                        <span>Thanh toán bằng Thẻ Tín Dụng (Stripe API)</span>
+                    </label>
+                    <div class="card-details">
+                        <input type="text" placeholder="Số thẻ (xxxx-xxxx-xxxx-xxxx)" class="full-width">
+                        <div style="display:flex; gap: 10px; margin-top: 10px;">
+                            <input type="text" placeholder="MM/YY">
+                            <input type="text" placeholder="CVC">
+                        </div>
+                        <p class="security-note"><i class="fa-solid fa-lock"></i> API Key được mã hóa và lưu trữ an toàn trong Azure Key Vault.</p>
+                    </div>
+                    
+                    <label class="payment-option" style="margin-top: 15px;">
+                        <input type="radio" name="payment">
+                        <span>Thanh toán khi nhận hàng (COD)</span>
+                    </label>
+                </div>
+
+                <button class="btn-primary" id="btn-submit-order" style="width: 100%; margin-top: 30px; padding: 16px; font-size: 1.1rem;">Hoàn Tất Đặt Hàng</button>
+            </div>
+
+            <!-- Tóm tắt đơn hàng -->
+            <div class="checkout-summary">
+                <h3><i class="fa-solid fa-bag-shopping"></i> Đơn hàng của bạn</h3>
+                <div id="checkout-items" class="checkout-items">
+                    <!-- Javascript load từ localStorage -->
+                </div>
+                <div class="checkout-totals">
+                    <div class="flex-between">
+                        <span>Tạm tính</span>
+                        <span id="checkout-subtotal">$0.00</span>
+                    </div>
+                    <div class="flex-between">
+                        <span>Phí vận chuyển</span>
+                        <span>Miễn phí</span>
+                    </div>
+                    <hr>
+                    <div class="flex-between total-row">
+                        <span>Tổng tiền</span>
+                        <span id="checkout-final-total" style="font-size: 1.5rem; color: var(--primary); font-weight: 700;">$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overlay Loading & Thành công -->
+    <div id="checkout-overlay" class="checkout-overlay hidden">
+        <div class="checkout-modal">
+            <div id="checkout-loading">
+                <div class="spinner" style="margin: 0 auto 20px;"></div>
+                <h3>Đang xử lý thanh toán...</h3>
+                <p>Gọi API đến Azure App Service và lưu Azure SQL...</p>
+            </div>
+            <div id="checkout-success" class="hidden text-center">
+                <i class="fa-solid fa-circle-check" style="font-size: 4rem; color: var(--success-color); margin-bottom: 20px;"></i>
+                <h3>Đặt Hàng Thành Công!</h3>
+                <p>Mã đơn hàng: <strong id="order-id">ORD-12345</strong></p>
+                <a href="index.html" class="btn-outline" style="margin-top: 20px;">Quay về Trang Chủ</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content text-center">
+            <p>&copy; 2026 AzureTech Store.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+
+
+=========================================
+FILE: login.html
+=========================================
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - AzureTech</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #f5f5f7 0%, #e0e7ff 100%);
+        }
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .login-card h2 {
+            margin-bottom: 8px;
+            font-size: 1.8rem;
+        }
+        .login-card p {
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            font-size: 0.9rem;
+        }
+        .form-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .form-group input:focus {
+            border-color: var(--secondary);
+        }
+        .btn-sso {
+            background: white;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-sso:hover {
+            background: #f9f9f9;
+        }
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 24px 0;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        .divider::before, .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border);
+        }
+        .divider:not(:empty)::before { margin-right: .25em; }
+        .divider:not(:empty)::after { margin-left: .25em; }
+    </style>
+</head>
+<body>
+    
+    <div class="login-card">
+        <a href="index.html" class="logo" style="justify-content: center; margin-bottom: 20px;">
+            <i class="fa-solid fa-cloud" style="font-size: 2rem;"></i>
+            <span style="font-size: 1.8rem;">AzureTech</span>
+        </a>
+        <h2>Đăng Nhập</h2>
+        <p>Hệ thống quản lý định danh (Azure Active Directory B2C)</p>
+        
+        <div class="form-group">
+            <label>Email</label>
+            <input type="email" placeholder="Nhập email...">
+        </div>
+        <div class="form-group">
+            <label>Mật khẩu</label>
+            <input type="password" placeholder="Nhập mật khẩu...">
+        </div>
+        
+        <button class="btn-primary" style="width: 100%; padding: 14px; border-radius: 12px; border:none;" onclick="window.location.href='index.html'">Đăng Nhập</button>
+        
+        <div class="divider">HOẶC</div>
+        
+        <button class="btn-sso">
+            <i class="fa-brands fa-microsoft" style="color: #00a4ef;"></i> Đăng nhập với Microsoft
+        </button>
+    </div>
+
+</body>
+</html>
+
+
+
+=========================================
+FILE: styles.css
+=========================================
+/* --- BỘ CÔNG CỤ CSS CAO CẤP: HIỆU ỨNG & KÍNH MỜ (GLASSMORPHISM) --- */
+:root {
+    --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --primary: #3b82f6;
+    --primary-glow: rgba(59, 130, 246, 0.6);
+    --secondary: #8b5cf6;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --success: #10b981;
+    --radius: 24px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+body {
+    background: var(--bg-gradient);
+    background-attachment: fixed; /* Tạo hiệu ứng parallax nhẹ ở nền */
+    color: var(--text-main);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+/* Hiệu ứng hạt bụi bay lơ lửng (Background Particles) */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: 
+        radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(circle at 85% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* --- NAVBAR GLASSMORPHISM --- */
+.navbar {
+    background: rgba(2, 6, 23, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--glass-border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: all 0.4s ease;
+}
+.navbar.scrolled {
+    padding: 5px 0;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    background: rgba(2, 6, 23, 0.9);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    transition: padding 0.3s;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.6rem;
+    font-weight: 800;
+    color: #fff;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.logo i {
+    color: var(--primary);
+    text-shadow: 0 0 15px var(--primary-glow);
+    animation: pulseGlow 2s infinite alternate;
+}
+
+@keyframes pulseGlow {
+    0% { filter: drop-shadow(0 0 5px var(--primary)); }
+    100% { filter: drop-shadow(0 0 20px var(--secondary)); }
+}
+
+/* Thanh tìm kiếm Neon */
+.search-bar {
+    display: flex;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 10px 20px;
+    width: 350px;
+    transition: all 0.3s ease;
+}
+.search-bar:focus-within {
+    background: rgba(255,255,255,0.1);
+    border-color: var(--primary);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    transform: scale(1.02);
+}
+.search-bar input {
+    border: none;
+    background: transparent;
+    width: 100%;
+    outline: none;
+    color: white;
+    font-size: 0.95rem;
+}
+.search-bar button {
+    background: transparent;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: transform 0.3s;
+}
+.search-bar button:hover {
+    transform: scale(1.2);
+}
+
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    position: relative;
+}
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px; left: 0; width: 0%; height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    transition: width 0.3s ease;
+}
+.nav-links a:hover { color: #fff; }
+.nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+.nav-links a.active { color: #fff; }
+
+.cart-icon {
+    position: relative;
+    cursor: pointer;
+    font-size: 1.4rem;
+    color: #fff;
+    transition: transform 0.3s;
+}
+.cart-icon:hover { transform: scale(1.1) rotate(-5deg); }
+.cart-badge {
+    position: absolute;
+    top: -8px; right: -12px;
+    background: linear-gradient(135deg, #ef4444, #f59e0b);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 20px; height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.5);
+    animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-5px);}
+    60% {transform: translateY(-3px);}
+}
+
+/* --- HERO SECTION 3D --- */
+.hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 80px 40px;
+    margin: 40px auto;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    box-shadow: var(--glass-shadow);
+    position: relative;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    perspective: 1000px;
+}
+/* Hiệu ứng quét ánh sáng chạy ngang qua Hero */
+.hero::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%; width: 50%; height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+    transform: skewX(-20deg);
+    animation: lightSweep 6s infinite;
+}
+@keyframes lightSweep {
+    0% { left: -100%; }
+    20% { left: 200%; }
+    100% { left: 200%; }
+}
+
+.hero-content {
+    flex: 1;
+    padding-right: 40px;
+    animation: slideInLeft 1s ease-out;
+}
+.hero-content h1 {
+    font-size: 3.5rem;
+    line-height: 1.2;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, #60a5fa, #a855f7);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(96, 165, 250, 0.3);
+}
+.hero-content p {
+    font-size: 1.15rem;
+    color: var(--text-muted);
+    margin-bottom: 40px;
+}
+.hero-image {
+    flex: 1;
+    text-align: right;
+    animation: float 6s ease-in-out infinite;
+}
+.hero-image img {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 20px;
+    object-fit: cover;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    border: 1px solid var(--glass-border);
+}
+
+@keyframes float {
+    0% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(2deg); }
+    100% { transform: translateY(0px) rotate(0deg); }
+}
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-50px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+/* NÚT BẤM HIỆU ỨNG GLOW */
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: white;
+    padding: 16px 32px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 20px var(--primary-glow);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+.btn-primary:hover {
+    transform: translateY(-3px) scale(1.05);
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.8);
+}
+.btn-outline {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--primary);
+    color: #fff;
+    padding: 12px 24px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+    text-decoration: none;
+    backdrop-filter: blur(5px);
+}
+.btn-outline:hover {
+    background: var(--primary);
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+/* --- PRODUCT CARDS 3D HOVER --- */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+    perspective: 1000px; /* Cho hiệu ứng lật 3D */
+}
+.product-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+    transform-style: preserve-3d;
+}
+.product-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(59, 130, 246, 0.2);
+    border-color: rgba(59, 130, 246, 0.5);
+}
+.product-img {
+    height: 260px;
+    overflow: hidden;
+    position: relative;
+}
+/* Overlay màu nhẹ khi hover ảnh */
+.product-img::before {
+    content: '';
+    position: absolute;
+    top:0; left:0; width:100%; height:100%;
+    background: linear-gradient(to bottom, transparent, rgba(0,0,0,0.7));
+    z-index: 1;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.product-card:hover .product-img::before { opacity: 1; }
+
+.product-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s ease;
+}
+.product-card:hover .product-img img {
+    transform: scale(1.15) rotate(1deg);
+}
+
+.product-info {
+    padding: 24px;
+    position: relative;
+    z-index: 2;
+}
+.product-info h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #fff;
+}
+.price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.price {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 10px rgba(255,255,255,0.3);
+}
+
+/* Nút thêm vào giỏ có hiệu ứng sóng (Ripple) */
+.btn-add-cart {
+    background: linear-gradient(135deg, #10b981, #059669);
+    border: none;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+}
+.btn-add-cart:hover {
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 0 25px rgba(16, 185, 129, 0.8);
+}
+
+/* --- ANIMATIONS SCROLL (JS KÍCH HOẠT) --- */
+.reveal {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* --- AI RECOMMENDATION LÓE SÁNG --- */
+.ai-section {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(59, 130, 246, 0.1) 100%);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    padding: 60px 40px;
+    border-radius: 30px;
+    margin-bottom: 60px;
+    position: relative;
+    box-shadow: 0 0 40px rgba(139, 92, 246, 0.15);
+}
+.gradient-text {
+    background: linear-gradient(to right, #c084fc, #38bdf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(192, 132, 252, 0.3);
+}
+
+/* --- SHOPPING CART SIDEBAR TRƯỢT 3D --- */
+.cart-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(10px);
+    z-index: 999;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.4s ease;
+}
+.cart-overlay.active { opacity: 1; visibility: visible; }
+
+.cart-sidebar {
+    position: fixed;
+    top: 0; right: -450px;
+    width: 400px; height: 100%;
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(20px);
+    border-left: 1px solid var(--glass-border);
+    z-index: 1000;
+    box-shadow: -10px 0 50px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    transition: right 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+.cart-sidebar.active { right: 0; }
+
+.cart-item {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    align-items: center;
+    background: rgba(255,255,255,0.05);
+    padding: 15px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+    transition: transform 0.3s;
+}
+.cart-item:hover { transform: translateX(-5px); border-color: var(--primary); }
+.cart-item img {
+    width: 70px; height: 70px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.cart-remove {
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.5);
+    color: #ef4444; cursor: pointer;
+    width: 35px; height: 35px;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+.cart-remove:hover {
+    background: #ef4444; color: white;
+    transform: rotate(180deg);
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: -100px; left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, var(--success), #059669);
+    color: white;
+    padding: 16px 32px;
+    border-radius: 30px;
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4);
+    transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    z-index: 2000;
+}
+.toast.show { bottom: 40px; }
+
+/* Loader Xoay 3D */
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(59, 130, 246, 0.1);
+    border-top-color: var(--secondary);
+    border-bottom-color: var(--primary);
+    border-radius: 50%;
+    animation: spin3D 1.2s linear infinite;
+    margin: 0 auto 20px;
+}
+@keyframes spin3D { 
+    0% { transform: rotate(0deg) scale(1); } 
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(1); } 
+}
+
+/* Các tiện ích còn lại */
+.text-center { text-align: center; }
+.hidden { display: none !important; }
+.footer {
+    background: rgba(0,0,0,0.5);
+    padding: 60px 0 20px;
+    border-top: 1px solid var(--glass-border);
+    margin-top: 80px;
+}
+.section-header { margin-bottom: 40px; }
+.checkout-page { margin-top: 40px; }
+.checkout-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 40px; }
+.checkout-form, .checkout-summary {
+    background: var(--glass-bg); border: 1px solid var(--glass-border);
+    padding: 40px; border-radius: 24px; backdrop-filter: blur(10px);
+}
+.form-group input {
+    background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
+    color: white; padding: 15px; border-radius: 12px;
+    width: 100%; transition: 0.3s;
+}
+.form-group input:focus { border-color: var(--primary); box-shadow: 0 0 15px var(--primary-glow); }
+.card-details { background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; border: 1px solid var(--glass-border); margin-top: 15px;}
+.card-details input { background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 8px; width: 100%;}
+.checkout-modal { background: var(--bg-gradient); color: white; padding: 50px; border-radius: 24px; border: 1px solid var(--primary); box-shadow: 0 0 50px var(--primary-glow);}
+.checkout-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.8); z-index:9999; display:flex; align-items:center; justify-content:center;}
+
+
+
+=========================================
+FILE: app.js
+=========================================
+document.addEventListener('DOMContentLoaded', () => {
+    // --- LƯU TRỮ VÀ GIAO DIỆN GIỎ HÀNG ---
+    let cart = JSON.parse(localStorage.getItem('azureTechCart')) || [];
+    
+    const cartToggle = document.getElementById('cart-toggle');
+    const closeCart = document.getElementById('close-cart');
+    const cartSidebar = document.getElementById('cart-sidebar');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartCount = document.getElementById('cart-count');
+    const cartTotal = document.getElementById('cart-total');
+    const toast = document.getElementById('toast');
+    const navbar = document.querySelector('.navbar');
+
+    // SCROLL NAVBAR EFFECT
+    window.addEventListener('scroll', () => {
+        if(window.scrollY > 50) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // CÁC HIỆU ỨNG REVEAL KHI CUỘN CHUỘT
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if(entry.isIntersecting) {
+                entry.target.classList.add('active');
+            }
+        });
+    }, { threshold: 0.1 });
+
+    // Gắn class reveal cho các thành phần để chạy hiệu ứng fade-up
+    document.querySelectorAll('.product-card, .section-header, .hero-content').forEach(el => {
+        el.classList.add('reveal');
+        observer.observe(el);
+    });
+
+
+    function saveCart() {
+        localStorage.setItem('azureTechCart', JSON.stringify(cart));
+    }
+
+    function toggleCart() {
+        if(cartSidebar && cartOverlay) {
+            cartSidebar.classList.toggle('active');
+            cartOverlay.classList.toggle('active');
+        }
+    }
+
+    if(cartToggle) cartToggle.addEventListener('click', toggleCart);
+    if(closeCart) closeCart.addEventListener('click', toggleCart);
+    if(cartOverlay) cartOverlay.addEventListener('click', toggleCart);
+
+    function updateCartUI() {
+        if(cartCount) cartCount.innerText = cart.length;
+        
+        let total = 0;
+        let html = '';
+
+        if (cart.length === 0) {
+            if(cartItemsContainer) cartItemsContainer.innerHTML = '<p class="empty-cart-msg">Giỏ hàng đang trống.</p>';
+            if(cartTotal) cartTotal.innerText = '$0.00';
+            
+            // Trang checkout
+            const checkoutSubtotal = document.getElementById('checkout-subtotal');
+            const checkoutFinal = document.getElementById('checkout-final-total');
+            const checkoutItems = document.getElementById('checkout-items');
+            if(checkoutSubtotal) checkoutSubtotal.innerText = '$0.00';
+            if(checkoutFinal) checkoutFinal.innerText = '$0.00';
+            if(checkoutItems) checkoutItems.innerHTML = '<p>Không có sản phẩm nào.</p>';
+            return;
+        }
+
+        cart.forEach((item, index) => {
+            total += parseFloat(item.price);
+            html += `
+                <div class="cart-item">
+                    <img src="${item.img}" alt="${item.name}">
+                    <div class="cart-item-info">
+                        <h4>${item.name}</h4>
+                        <span class="price">$${item.price}</span>
+                    </div>
+                    <button class="cart-remove" data-index="${index}"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+        });
+        
+        if(cartItemsContainer) cartItemsContainer.innerHTML = html;
+        if(cartTotal) cartTotal.innerText = '$' + total.toFixed(2);
+
+        // Nút xóa trong giỏ hàng
+        document.querySelectorAll('.cart-remove').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const index = e.target.closest('.cart-remove').getAttribute('data-index');
+                cart.splice(index, 1);
+                saveCart();
+                updateCartUI();
+                
+                if(typeof fetchAIRecommendations === 'function') {
+                    fetchAIRecommendations();
+                }
+            });
+        });
+
+        // Checkout Sync
+        const checkoutItems = document.getElementById('checkout-items');
+        if(checkoutItems) {
+            checkoutItems.innerHTML = html; 
+            document.getElementById('checkout-subtotal').innerText = '$' + total.toFixed(2);
+            document.getElementById('checkout-final-total').innerText = '$' + total.toFixed(2);
+        }
+    }
+
+    function showToast(msg) {
+        if(!toast) return;
+        toast.innerText = msg;
+        toast.classList.add('show');
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // Gắn sự kiện mua hàng
+    document.querySelectorAll('.btn-add-cart').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const button = e.target.closest('.btn-add-cart');
+            const name = button.getAttribute('data-name');
+            const price = button.getAttribute('data-price');
+            const img = button.getAttribute('data-img');
+
+            cart.push({ name, price, img });
+            saveCart();
+            updateCartUI();
+            showToast(`Thêm thành công: ${name}`);
+
+            if(typeof fetchAIRecommendations === 'function') {
+                fetchAIRecommendations();
+            }
+        });
+    });
+
+    updateCartUI();
+
+    // --- MÔ PHỎNG AZURE MACHINE LEARNING GỢI Ý (Trang chủ) ---
+    const aiProductsContainer = document.getElementById('ai-products');
+    const aiLoading = document.getElementById('ai-loading');
+    const btnRefreshAi = document.getElementById('refresh-ai');
+
+    const dbRecommend = [
+        { name: "Ốp lưng iPhone 15 Pro", price: "29.99", img: "img/iphone.svg", cat: "Phụ kiện" },
+        { name: "Chuột Magic Mouse", price: "79.00", img: "img/mouse.svg", cat: "Phụ kiện" },
+        { name: "Bàn phím cơ Keychron", price: "99.00", img: "img/keyboard.svg", cat: "Phụ kiện" },
+        { name: "Màn hình Dell UltraSharp", price: "599.00", img: "img/dell.svg", cat: "Màn hình" },
+        { name: "AirPods Pro", price: "249.00", img: "img/headphones.svg", cat: "Phụ kiện" }
+    ];
+
+    window.fetchAIRecommendations = function() {
+        if(!aiProductsContainer) return;
+
+        aiProductsContainer.innerHTML = '';
+        aiProductsContainer.classList.add('hidden');
+        aiLoading.classList.remove('hidden');
+
+        // Fake delay để giống gọi API
+        setTimeout(() => {
+            aiLoading.classList.add('hidden');
+            aiProductsContainer.classList.remove('hidden');
+
+            const shuffled = [...dbRecommend].sort(() => 0.5 - Math.random());
+            let html = '';
+            shuffled.slice(0, 3).forEach(item => {
+                html += `
+                    <div class="product-card reveal active" style="background: rgba(0,0,0,0.2);">
+                        <div class="product-img">
+                            <img src="${item.img}" alt="${item.name}" style="object-fit:contain; padding:10px;">
+                        </div>
+                        <div class="product-info">
+                            <p class="category">${item.cat}</p>
+                            <h3>${item.name}</h3>
+                            <div class="price-row">
+                                <span class="price">$${item.price}</span>
+                                <button class="btn-add-cart" data-name="${item.name}" data-price="${item.price}" data-img="${item.img}"><i class="fa-solid fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            aiProductsContainer.innerHTML = html;
+
+            // Chạy lại logic mua hàng cho gợi ý mới
+            aiProductsContainer.querySelectorAll('.btn-add-cart').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const button = e.target.closest('.btn-add-cart');
+                    cart.push({
+                        name: button.getAttribute('data-name'),
+                        price: button.getAttribute('data-price'),
+                        img: button.getAttribute('data-img')
+                    });
+                    saveCart();
+                    updateCartUI();
+                    showToast(`Thêm thành công: ${button.getAttribute('data-name')}`);
+                });
+            });
+        }, 1200);
+    }
+
+    if(btnRefreshAi) {
+        btnRefreshAi.addEventListener('click', window.fetchAIRecommendations);
+        window.fetchAIRecommendations();
+    }
+
+    // --- CHECKOUT LOGIC (Giả lập Azure SQL & Key Vault) ---
+    const btnSubmitOrder = document.getElementById('btn-submit-order');
+    if(btnSubmitOrder) {
+        btnSubmitOrder.addEventListener('click', () => {
+            if(cart.length === 0) {
+                alert("Giỏ hàng của bạn đang trống!");
+                return;
+            }
+
+            document.getElementById('checkout-overlay').classList.remove('hidden');
+            
+            // Xử lý loading 2.5s
+            setTimeout(() => {
+                document.getElementById('checkout-loading').classList.add('hidden');
+                document.getElementById('checkout-success').classList.remove('hidden');
+                
+                // Xóa giỏ hàng sau khi thanh toán
+                cart = [];
+                saveCart();
+                updateCartUI();
+            }, 2500);
+        });
+    }
+});
+
+
+

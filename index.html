@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AzureTech - Cửa Hàng Điện Tử Cao Cấp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-cloud"></i>
+                <span>AzureTech</span>
+            </a>
+            
+            <div class="search-bar">
+                <input type="text" placeholder="Tìm kiếm sản phẩm...">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            
+            <nav class="nav-links">
+                <a href="index.html" class="active">Trang Chủ</a>
+                <a href="products.html">Sản Phẩm</a>
+                <div class="cart-icon" id="cart-toggle">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </div>
+                <div class="user-menu">
+                    <a href="login.html"><img src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" style="border-radius:50%" alt="Avatar"></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Giỏ Hàng Của Bạn</h2>
+            <button id="close-cart"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items">
+            <p class="empty-cart-msg">Giỏ hàng đang trống.</p>
+        </div>
+        <div class="cart-footer">
+            <div class="total">
+                <span>Tổng tiền:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <a href="checkout.html" class="btn-checkout text-center" style="display:block; text-decoration:none;">Thanh Toán Ngay</a>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cart-overlay"></div>
+
+    <!-- Hero Section -->
+    <section class="hero" style="margin-top: 40px;">
+        <div class="hero-content">
+            <h1>Công nghệ vượt trội,<br>Trải nghiệm đỉnh cao.</h1>
+            <p>Khám phá hệ sinh thái thiết bị điện tử mới nhất, được cá nhân hóa hoàn toàn cho bạn thông qua AI.</p>
+            <a href="products.html" class="btn-primary">Mua Sắm Ngay <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="hero-image" style="background: rgba(255,255,255,0.1); border-radius: 50%; padding: 20px;">
+            <img src="img/hero.svg" alt="Tech setup">
+        </div>
+    </section>
+
+    <!-- AI Recommendation Section -->
+    <section class="section container ai-section">
+        <div class="section-header">
+            <div>
+                <h2 class="gradient-text"><i class="fa-solid fa-wand-magic-sparkles"></i> AI Gợi Ý Nhanh</h2>
+                <p>Azure Machine Learning phân tích real-time từ giỏ hàng hiện tại của bạn.</p>
+            </div>
+            <button id="refresh-ai" class="btn-outline"><i class="fa-solid fa-rotate-right"></i> Tải lại Gợi ý</button>
+        </div>
+        
+        <div class="loading-state hidden" id="ai-loading">
+            <div class="spinner"></div>
+            <p>Azure ML Endpoint đang tính toán...</p>
+        </div>
+
+        <div class="product-grid" id="ai-products">
+            <!-- Injected by JS -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2><i class="fa-solid fa-cloud"></i> AzureTech</h2>
+                <p>Nền tảng thương mại điện tử hiện đại, vận hành 100% trên kiến trúc Đám mây.</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AzureTech Store. Demo for Cloud Computing Project.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">Đã thêm vào giỏ hàng!</div>
+
+    <script src="app.js"></script>
+</body>
+</html>

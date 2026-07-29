@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sản Phẩm - AzureTech Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .product-img { background: transparent; display:flex; align-items:center; justify-content:center; padding: 20px;}
+        .product-img img { object-fit: contain;}
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-cloud"></i>
+                <span>AzureTech</span>
+            </a>
+            <div class="search-bar">
+                <input type="text" placeholder="Tìm kiếm sản phẩm...">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            </div>
+            <nav class="nav-links">
+                <a href="index.html">Trang Chủ</a>
+                <a href="products.html" class="active">Sản Phẩm</a>
+                <div class="cart-icon" id="cart-toggle">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                    <span class="cart-badge" id="cart-count">0</span>
+                </div>
+                <div class="user-menu">
+                    <a href="login.html"><img src="https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff" style="border-radius:50%" alt="Avatar"></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Shopping Cart Sidebar -->
+    <div class="cart-sidebar" id="cart-sidebar">
+        <div class="cart-header">
+            <h2>Giỏ Hàng Của Bạn</h2>
+            <button id="close-cart"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="cart-items" id="cart-items"></div>
+        <div class="cart-footer">
+            <div class="total">
+                <span>Tổng tiền:</span>
+                <span id="cart-total">$0.00</span>
+            </div>
+            <a href="checkout.html" class="btn-checkout text-center" style="display:block; text-decoration:none;">Thanh Toán Ngay</a>
+        </div>
+    </div>
+    <div class="cart-overlay" id="cart-overlay"></div>
+
+    <!-- Main Products Section -->
+    <section class="section container" style="margin-top: 40px;">
+        <div class="section-header reveal">
+            <h2>🔥 Toàn Bộ Sản Phẩm</h2>
+            <div class="categories">
+                <span class="active">Tất cả</span>
+                <span>Điện thoại</span>
+                <span>Laptop</span>
+                <span>Phụ kiện</span>
+            </div>
+        </div>
+        
+        <div class="product-grid">
+            <!-- Product 1 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/macbook.svg" alt="Macbook"></div>
+                <div class="product-info">
+                    <p class="category">Laptop</p>
+                    <h3>Apple MacBook Pro 14" (M3)</h3>
+                    <div class="price-row">
+                        <span class="price">$1,999.00</span>
+                        <button class="btn-add-cart" data-name="MacBook Pro 14" data-price="1999.00" data-img="img/macbook.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 2 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/dell.svg" alt="Dell XPS"></div>
+                <div class="product-info">
+                    <p class="category">Laptop</p>
+                    <h3>Dell XPS 15 (2024)</h3>
+                    <div class="price-row">
+                        <span class="price">$1,750.00</span>
+                        <button class="btn-add-cart" data-name="Dell XPS 15" data-price="1750.00" data-img="img/dell.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 3 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/iphone.svg" alt="Phone"></div>
+                <div class="product-info">
+                    <p class="category">Điện thoại</p>
+                    <h3>iPhone 15 Pro Max 256GB</h3>
+                    <div class="price-row">
+                        <span class="price">$1,199.00</span>
+                        <button class="btn-add-cart" data-name="iPhone 15 Pro Max" data-price="1199.00" data-img="img/iphone.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product 4 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/headphones.svg" alt="Headphone"></div>
+                <div class="product-info">
+                    <p class="category">Phụ kiện</p>
+                    <h3>Tai nghe Sony WH-1000XM5</h3>
+                    <div class="price-row">
+                        <span class="price">$349.99</span>
+                        <button class="btn-add-cart" data-name="Sony WH-1000XM5" data-price="349.99" data-img="img/headphones.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 5 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/watch.svg" alt="Watch"></div>
+                <div class="product-info">
+                    <p class="category">Phụ kiện</p>
+                    <h3>Apple Watch Ultra 2</h3>
+                    <div class="price-row">
+                        <span class="price">$799.00</span>
+                        <button class="btn-add-cart" data-name="Apple Watch Ultra 2" data-price="799.00" data-img="img/watch.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Product 6 -->
+            <div class="product-card reveal">
+                <div class="product-img"><img src="img/charger.svg" alt="Charger"></div>
+                <div class="product-info">
+                    <p class="category">Phụ kiện</p>
+                    <h3>Sạc nhanh GaN 100W</h3>
+                    <div class="price-row">
+                        <span class="price">$59.00</span>
+                        <button class="btn-add-cart" data-name="Sạc nhanh GaN 100W" data-price="59.00" data-img="img/charger.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer reveal">
+        <div class="container footer-content">
+            <div class="footer-brand">
+                <h2><i class="fa-solid fa-cloud"></i> AzureTech</h2>
+                <p>Nền tảng thương mại điện tử hiện đại, vận hành 100% trên kiến trúc Đám mây.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast">Đã thêm vào giỏ hàng!</div>
+
+    <script src="app.js"></script>
+</body>
+</html>

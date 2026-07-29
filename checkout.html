@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh Toán - AzureTech Store</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fa-solid fa-cloud"></i>
+                <span>AzureTech</span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">Trang Chủ</a>
+                <a href="products.html">Sản Phẩm</a>
+                <div class="user-menu">
+                    <a href="login.html"><img src="https://ui-avatars.com/api/?name=User&background=0D8ABC&color=fff" alt="Avatar"></a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="cart-overlay" id="cart-overlay"></div>
+    <div class="cart-sidebar" id="cart-sidebar" style="display:none;"></div>
+
+    <section class="section container checkout-page">
+        <div class="section-header">
+            <h2>Thanh Toán Đơn Hàng</h2>
+            <p>Xử lý qua cổng thanh toán bảo mật bằng Azure Key Vault.</p>
+        </div>
+
+        <div class="checkout-grid">
+            <!-- Form thông tin giao hàng -->
+            <div class="checkout-form">
+                <h3><i class="fa-solid fa-location-dot"></i> Thông tin giao hàng</h3>
+                <div class="form-group">
+                    <label>Họ và Tên</label>
+                    <input type="text" placeholder="Nhập họ và tên...">
+                </div>
+                <div class="form-group">
+                    <label>Số điện thoại</label>
+                    <input type="tel" placeholder="Nhập số điện thoại...">
+                </div>
+                <div class="form-group">
+                    <label>Địa chỉ nhận hàng</label>
+                    <input type="text" placeholder="Số nhà, tên đường, phường/xã, quận/huyện...">
+                </div>
+
+                <h3 style="margin-top: 30px;"><i class="fa-regular fa-credit-card"></i> Phương thức thanh toán</h3>
+                <div class="payment-methods">
+                    <label class="payment-option">
+                        <input type="radio" name="payment" checked>
+                        <span>Thanh toán bằng Thẻ Tín Dụng (Stripe API)</span>
+                    </label>
+                    <div class="card-details">
+                        <input type="text" placeholder="Số thẻ (xxxx-xxxx-xxxx-xxxx)" class="full-width">
+                        <div style="display:flex; gap: 10px; margin-top: 10px;">
+                            <input type="text" placeholder="MM/YY">
+                            <input type="text" placeholder="CVC">
+                        </div>
+                        <p class="security-note"><i class="fa-solid fa-lock"></i> API Key được mã hóa và lưu trữ an toàn trong Azure Key Vault.</p>
+                    </div>
+                    
+                    <label class="payment-option" style="margin-top: 15px;">
+                        <input type="radio" name="payment">
+                        <span>Thanh toán khi nhận hàng (COD)</span>
+                    </label>
+                </div>
+
+                <button class="btn-primary" id="btn-submit-order" style="width: 100%; margin-top: 30px; padding: 16px; font-size: 1.1rem;">Hoàn Tất Đặt Hàng</button>
+            </div>
+
+            <!-- Tóm tắt đơn hàng -->
+            <div class="checkout-summary">
+                <h3><i class="fa-solid fa-bag-shopping"></i> Đơn hàng của bạn</h3>
+                <div id="checkout-items" class="checkout-items">
+                    <!-- Javascript load từ localStorage -->
+                </div>
+                <div class="checkout-totals">
+                    <div class="flex-between">
+                        <span>Tạm tính</span>
+                        <span id="checkout-subtotal">$0.00</span>
+                    </div>
+                    <div class="flex-between">
+                        <span>Phí vận chuyển</span>
+                        <span>Miễn phí</span>
+                    </div>
+                    <hr>
+                    <div class="flex-between total-row">
+                        <span>Tổng tiền</span>
+                        <span id="checkout-final-total" style="font-size: 1.5rem; color: var(--primary); font-weight: 700;">$0.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Overlay Loading & Thành công -->
+    <div id="checkout-overlay" class="checkout-overlay hidden">
+        <div class="checkout-modal">
+            <div id="checkout-loading">
+                <div class="spinner" style="margin: 0 auto 20px;"></div>
+                <h3>Đang xử lý thanh toán...</h3>
+                <p>Gọi API đến Azure App Service và lưu Azure SQL...</p>
+            </div>
+            <div id="checkout-success" class="hidden text-center">
+                <i class="fa-solid fa-circle-check" style="font-size: 4rem; color: var(--success-color); margin-bottom: 20px;"></i>
+                <h3>Đặt Hàng Thành Công!</h3>
+                <p>Mã đơn hàng: <strong id="order-id">ORD-12345</strong></p>
+                <a href="index.html" class="btn-outline" style="margin-top: 20px;">Quay về Trang Chủ</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container footer-content text-center">
+            <p>&copy; 2026 AzureTech Store.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
