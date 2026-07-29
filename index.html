@@ -115,7 +115,15 @@
         <button id="ai-translate-btn" style="padding: 10px 20px; background: #0078d4; color: white; border: none; border-radius: 5px; cursor: pointer;">Dịch</button>
         <p id="ai-translate-result" style="margin-top: 15px; font-weight: bold; color: #d13438;"></p>
     </div>
-
+    <!-- Khung Test Đọc Văn Bản (Text to Speech) -->
+    <div style="margin: 20px auto; max-width: 800px; padding: 20px; border: 2px dashed #107c10; border-radius: 10px; text-align: center; background: #f3f2f1;">
+        <h3 style="color: #107c10; margin-bottom: 10px;">Đọc Văn Bản bằng giọng nói AI</h3>
+        <input type="text" id="ai-tts-input" placeholder="Nhập câu tiếng Việt muốn AI đọc..." style="width: 70%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <button id="ai-tts-btn" style="padding: 10px 20px; background: #107c10; color: white; border: none; border-radius: 5px; cursor: pointer;">Phát Âm Thanh</button>
+        <p id="ai-tts-status" style="margin-top: 15px; font-weight: bold; color: #107c10;"></p>
+        <!-- Cái loa ẩn dùng để phát nhạc -->
+        <audio id="ai-tts-audio" style="display: none;"></audio>
+    </div>
     <!-- Script phải được đặt ở vị trí cuối cùng này -->
     <script src="app.js"></script>
 </body>
