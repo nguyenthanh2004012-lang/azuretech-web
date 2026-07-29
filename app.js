@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if(overlay) overlay.classList.remove('hidden');
             if(loading) loading.classList.remove('hidden');
 
-            f// Đúng endpoint SubmitOrder để đẩy dữ liệu xuống bảng UserLogs
+            // Đúng endpoint SubmitOrder để đẩy dữ liệu xuống bảng UserLogs
             fetch('/api/SubmitOrder', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
