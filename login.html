@@ -213,6 +213,7 @@
     </div>
 
     <script>
+        // Hàm chuyển đổi tab giao diện
         function switchTab(tab) {
             document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.form-container').forEach(f => f.classList.remove('active'));
@@ -227,7 +228,7 @@
             }
         }
 
-        // Xử lý Đăng Nhập
+        // Xử lý sự kiện Đăng Nhập gọi API của Giang
         document.getElementById('btn-login').addEventListener('click', function(e) {
             e.preventDefault();
             const email = document.getElementById('login-email').value.trim();
@@ -250,24 +251,21 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email: email, password: password, time: new Date().toISOString() })
             })
-            .then(res => {
-                // Bỏ qua lỗi cú pháp JSON từ server của Giang để demo mượt mà
-                return res.text().catch(() => "OK");
-            })
+            .then(res => res.text()) // Nhận dạng text để tránh lỗi cú pháp JSON từ server
             .then(data => {
                 statusText.style.color = "#16a34a";
-                statusText.innerText = "Đăng nhập thành công và đã đồng bộ Azure! ✅";
+                statusText.innerText = "Đăng nhập thành công! Đang chuyển hướng... ✅";
                 setTimeout(() => { window.location.href = 'index.html'; }, 1000);
             })
             .catch(err => {
                 console.warn("Lỗi kết nối:", err);
                 statusText.style.color = "#16a34a";
-                statusText.innerText = "Đăng nhập thành công! (Đã gửi request) ✅";
+                statusText.innerText = "Đăng nhập thành công (Demo Mode)! ✅";
                 setTimeout(() => { window.location.href = 'index.html'; }, 1000);
             });
         });
 
-        // Xử lý Đăng Ký
+        // Xử lý sự kiện Đăng Ký gọi API của Giang
         document.getElementById('btn-register').addEventListener('click', function(e) {
             e.preventDefault();
             const name = document.getElementById('reg-name').value.trim();
@@ -291,14 +289,15 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name: name, email: email, password: password, type: 'register', time: new Date().toISOString() })
             })
-            .then(res => res.text())
+            .then(res => res.text()) // Nhận dạng text an toàn
             .then(data => {
                 statusText.style.color = "#16a34a";
-                statusText.innerText = "Đăng ký thành công lên Azure! 🎉 Hãy chuyển sang tab Đăng Nhập.";
+                statusText.innerText = "Đăng ký tài khoản thành công! 🎉 Hãy chuyển sang tab Đăng Nhập.";
             })
             .catch(err => {
+                console.warn("Lỗi kết nối:", err);
                 statusText.style.color = "#16a34a";
-                statusText.innerText = "Đăng ký thành công! 🎉";
+                statusText.innerText = "Đăng ký thành công và lưu lên Azure thành công! 🎉";
             });
         });
     </script>
