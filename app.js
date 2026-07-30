@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // === CHỨC NĂNG GIỎ HÀNG VÀ GIAO DIỆN CƠ BẢN ===
     let cart = JSON.parse(localStorage.getItem('azureTechCart')) || [];
     
     const cartToggle = document.getElementById('cart-toggle');
@@ -268,7 +269,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     text: textToTranslate,
-                    to: "vi" // Dịch sang tiếng Việt
+                    to: "vi"
                 })
             })
             .then(response => response.json())
@@ -340,7 +341,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// === CHỨC NĂNG COMPUTER VISION (PHÂN TÍCH ẢNH) - CODE CHUẨN ===
+// === CHỨC NĂNG COMPUTER VISION (PHÂN TÍCH ẢNH) - BẢN HIỂN THỊ ĐẸP ===
 window.addEventListener('DOMContentLoaded', () => {
     const inputVision = document.getElementById('ai-vision-input');
     const btnVision = document.getElementById('ai-vision-btn');
@@ -388,7 +389,6 @@ window.addEventListener('DOMContentLoaded', () => {
                     if (data.success) {
                         const visionData = data.data;
                         
-                        // Bắt lỗi nếu Azure trả về mã lỗi bên trong
                         if (visionData.error) {
                             statusVision.innerText = "Azure từ chối phân tích! ❌";
                             resultVision.style.display = 'block';
@@ -397,16 +397,20 @@ window.addEventListener('DOMContentLoaded', () => {
                         }
 
                         statusVision.innerText = "Phân tích thành công! ✅";
+                        
+                        // Lọc lấy mô tả chính xác nhất từ Azure
                         const caption = visionData.description && visionData.description.captions.length > 0 
                                         ? visionData.description.captions[0].text 
-                                        : "Không tìm thấy mô tả.";
+                                        : "Không tìm thấy mô tả chi tiết.";
                         
+                        // Lọc lấy danh sách từ khóa (tags)
                         const tags = visionData.tags ? visionData.tags.map(t => t.name).join(", ") : "Không có từ khóa.";
 
+                        // Hiển thị ra giao diện người dùng
                         resultVision.style.display = 'block';
                         resultVision.innerHTML = `
-                            <strong>Mô tả (AI đoán):</strong> ${caption} <br><br>
-                            <strong>Từ khóa liên quan:</strong> ${tags}
+                            <strong style="color:#007bff;">Mô tả (AI phân tích):</strong> ${caption} <br><br>
+                            <strong style="color:#28a745;">Từ khóa liên quan:</strong> ${tags}
                         `;
                     } else {
                         statusVision.innerText = "Lỗi: " + data.message;
