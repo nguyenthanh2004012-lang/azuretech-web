@@ -426,6 +426,7 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 // === CHỨC NĂNG FACE API (NHẬN DIỆN KHUÔN MẶT) ===
 window.addEventListener('DOMContentLoaded', () => {
     const inputFace = document.getElementById('ai-face-input');
@@ -494,7 +495,7 @@ window.addEventListener('DOMContentLoaded', () => {
                             htmlResult += `
                                 <div style="margin-bottom: 10px; padding: 10px; border-bottom: 1px solid #ccc;">
                                     <strong style="color: #6f42c1;">Khuôn mặt ${index + 1}</strong><br>
-                                    - Trạng thái: Đã định vị thành công <br>
+                                    - Trạng thái: Đã định vị thành công ✅<br>
                                     - Khung tọa độ: Rộng ${rect.width}px, Cao ${rect.height}px
                                 </div>
                             `;
