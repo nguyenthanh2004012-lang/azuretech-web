@@ -517,3 +517,68 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// === CHỨC NĂNG AZURE AI LANGUAGE (PHÂN TÍCH CẢM XÚC) ===
+window.addEventListener('DOMContentLoaded', () => {
+    const btnLang = document.getElementById('ai-lang-btn');
+    const inputLang = document.getElementById('ai-lang-input');
+    const statusLang = document.getElementById('ai-lang-status');
+    const resultLang = document.getElementById('ai-lang-result');
+
+    if (btnLang && inputLang && statusLang && resultLang) {
+        btnLang.addEventListener('click', () => {
+            const textToAnalyze = inputLang.value.trim();
+            if (!textToAnalyze) {
+                alert("Bạn chưa nhập chữ!");
+                return;
+            }
+
+            statusLang.innerText = "Đang nhờ Azure bắt mạch cảm xúc... ⏳";
+            btnLang.disabled = true;
+            resultLang.style.display = 'none';
+
+            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/AnalyzeLanguage', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: textToAnalyze })
+            })
+            .then(response => response.json())
+            .then(data => {
+                btnLang.disabled = false;
+                if (data.success) {
+                    const langData = data.data;
+                    
+                    if (langData.error || (langData.results && langData.results.errors && langData.results.errors.length > 0)) {
+                        statusLang.innerText = "Azure từ chối phân tích! ❌";
+                        return;
+                    }
+
+                    statusLang.innerText = "Phân tích xong! ✅";
+                    const docResult = langData.results.documents[0];
+                    
+                    let sentimentVi = "";
+                    let icon = "";
+                    if (docResult.sentiment === "positive") { sentimentVi = "Tích cực"; icon = "🥰"; }
+                    else if (docResult.sentiment === "negative") { sentimentVi = "Tiêu cực"; icon = "😡"; }
+                    else if (docResult.sentiment === "neutral") { sentimentVi = "Bình thường"; icon = "😐"; }
+                    else { sentimentVi = "Trái chiều (Vừa khen vừa chê)"; icon = "🤔"; }
+
+                    resultLang.style.display = 'block';
+                    resultLang.innerHTML = `
+                        <strong style="color:#17a2b8;">Kết quả tổng quan:</strong> ${sentimentVi} ${icon}<br><br>
+                        <strong>Tỉ lệ AI đoán:</strong><br>
+                        - Tích cực: ${Math.round(docResult.confidenceScores.positive * 100)}%<br>
+                        - Trung tính: ${Math.round(docResult.confidenceScores.neutral * 100)}%<br>
+                        - Tiêu cực: ${Math.round(docResult.confidenceScores.negative * 100)}%
+                    `;
+                } else {
+                    statusLang.innerText = "Lỗi: " + data.message;
+                }
+            })
+            .catch(error => {
+                btnLang.disabled = false;
+                console.error("Lỗi API Language:", error);
+                statusLang.innerText = "Lỗi kết nối đến Server!";
+            });
+        });
+    }
+});
