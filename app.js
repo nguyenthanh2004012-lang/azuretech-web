@@ -582,3 +582,74 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// === CHỨC NĂNG AZURE AI CONTENT SAFETY (KIỂM DUYỆT NỘI DUNG) ===
+window.addEventListener('DOMContentLoaded', () => {
+    const btnSafety = document.getElementById('ai-safety-btn');
+    const inputSafety = document.getElementById('ai-safety-input');
+    const statusSafety = document.getElementById('ai-safety-status');
+    const resultSafety = document.getElementById('ai-safety-result');
+
+    if (btnSafety && inputSafety && statusSafety && resultSafety) {
+        btnSafety.addEventListener('click', () => {
+            const textToCheck = inputSafety.value.trim();
+            if (!textToCheck) {
+                alert("Bạn chưa nhập chữ!");
+                return;
+            }
+
+            statusSafety.innerText = "Đang nhờ Azure kiểm duyệt nội dung... ⏳";
+            btnSafety.disabled = true;
+            resultSafety.style.display = 'none';
+
+            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/CheckContentSafety', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: textToCheck })
+            })
+            .then(response => response.json())
+            .then(data => {
+                btnSafety.disabled = false;
+                if (data.success) {
+                    const safetyData = data.data;
+                    
+                    if (safetyData.error) {
+                        statusSafety.innerText = "Azure từ chối kiểm duyệt! ❌";
+                        return;
+                    }
+
+                    statusSafety.innerText = "Kiểm duyệt xong! ✅";
+                    
+                    // Lấy điểm số mức độ nguy hại (Hate, SelfHarm, Sexual, Violence từ 0 đến 6)
+                    const categories = safetyData.categoriesAnalysis || [];
+                    let htmlResult = "<strong style='color:#d39e00;'>Mức độ độc hại (Điểm càng cao càng nguy hiểm, thang từ 0-6):</strong><br><br>";
+                    
+                    if (categories.length === 0) {
+                        htmlResult += "Nội dung hoàn toàn trong sạch, an toàn tuyệt đối! 🟢";
+                    } else {
+                        categories.forEach(cat => {
+                            let severityName = "";
+                            if (cat.category === "Hate") severityName = "Ngôn từ thù ghét (Hate Speech)";
+                            else if (cat.category === "SelfHarm") severityName = "Tự hại (Self Harm)";
+                            else if (cat.category === "Sexual") severityName = "Nội dung nhạy cảm (Sexual)";
+                            else if (cat.category === "Violence") severityName = "Bạo lực (Violence)";
+                            else severityName = cat.category;
+
+                            let color = cat.severity > 0 ? "red" : "green";
+                            htmlResult += `- ${severityName}: <span style="color:${color}; font-weight:bold;">Mức độ ${cat.severity}</span><br>`;
+                        });
+                    }
+
+                    resultSafety.style.display = 'block';
+                    resultSafety.innerHTML = htmlResult;
+                } else {
+                    statusSafety.innerText = "Lỗi: " + data.message;
+                }
+            })
+            .catch(error => {
+                btnSafety.disabled = false;
+                console.error("Lỗi API Content Safety:", error);
+                statusSafety.innerText = "Lỗi kết nối đến Server!";
+            });
+        });
+    }
+});
