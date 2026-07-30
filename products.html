@@ -11,18 +11,20 @@
         .product-img { background: transparent; display:flex; align-items:center; justify-content:center; padding: 20px;}
         .product-img img { object-fit: contain;}
         
-        /* CSS cho phần khung Bình luận */
+        /* CSS chuẩn Dark Theme cho phần Bình Luận */
         .comments-section {
             max-width: 800px;
             margin: 50px auto;
-            background: #ffffff;
+            background: #1e293b;
             padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
         }
         .comments-section h3 {
             margin-bottom: 20px;
-            color: #1e293b;
+            color: #38bdf8;
             font-size: 22px;
         }
         .comment-form .form-group {
@@ -31,32 +33,34 @@
         .comment-form input, .comment-form textarea {
             width: 100%;
             padding: 12px;
-            border: 1px solid #cbd5e1;
+            background: #0f172a;
+            border: 1px solid #334155;
             border-radius: 8px;
+            color: #ffffff;
             font-family: 'Inter', sans-serif;
             font-size: 14px;
             outline: none;
             transition: border-color 0.2s;
         }
         .comment-form input:focus, .comment-form textarea:focus {
-            border-color: #3b82f6;
+            border-color: #38bdf8;
         }
         .comment-form textarea {
             resize: vertical;
             height: 100px;
         }
         .btn-submit-comment {
-            background-color: #3b82f6;
+            background-color: #10b981;
             color: white;
             border: none;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: opacity 0.2s;
         }
         .btn-submit-comment:hover {
-            background-color: #2563eb;
+            opacity: 0.9;
         }
         #comment-status {
             margin-top: 10px;
@@ -201,9 +205,9 @@
         </div>
     </section>
 
-    <!-- Phần Bình Luận (Comments Section) -->
+    <!-- Phần Bình Luận -->
     <section class="container">
-        <div class="comments-section reveal">
+        <div class="comments-section">
             <h3>💬 Đánh giá & Bình luận sản phẩm</h3>
             <form id="comment-form" class="comment-form">
                 <div class="form-group">
@@ -242,11 +246,9 @@
             e.preventDefault();
 
             const userName = document.getElementById('userName').value;
-            const commentText = document.getElementById('comment-text') || document.getElementById('commentText').value;
-            // Xử lý lấy đúng ID trường nội dung bình luận
             const textValue = document.getElementById('commentText').value;
 
-            commentStatus.style.color = '#3b82f6';
+            commentStatus.style.color = '#38bdf8';
             commentStatus.innerText = 'Đang gửi bình luận lên hệ thống...';
 
             try {
