@@ -245,7 +245,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
-});// === CHỨC NĂNG DỊCH THUẬT AZURE ===
+});
+
+// === CHỨC NĂNG DỊCH THUẬT AZURE ===
 window.addEventListener('DOMContentLoaded', () => {
     const btnTranslate = document.getElementById('ai-translate-btn');
     const inputTranslate = document.getElementById('ai-translate-input');
@@ -284,131 +286,133 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
 // === CHỨC NĂNG TEXT TO SPEECH (ĐỌC VĂN BẢN) ===
-const btnTts = document.getElementById('ai-tts-btn');
-const inputTts = document.getElementById('ai-tts-input');
-const statusTts = document.getElementById('ai-tts-status');
-const audioTts = document.getElementById('ai-tts-audio');
+window.addEventListener('DOMContentLoaded', () => {
+    const btnTts = document.getElementById('ai-tts-btn');
+    const inputTts = document.getElementById('ai-tts-input');
+    const statusTts = document.getElementById('ai-tts-status');
+    const audioTts = document.getElementById('ai-tts-audio');
 
-if (btnTts && inputTts && statusTts && audioTts) {
-    btnTts.addEventListener('click', () => {
-        const textToSpeak = inputTts.value.trim();
-        if (!textToSpeak) {
-            alert("Bạn chưa nhập chữ!");
-            return;
-        }
-
-        statusTts.innerText = "Đang nhờ Azure tạo giọng nói...";
-        btnTts.disabled = true;
-
-        fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/TextToSpeech', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ text: textToSpeak })
-        })
-        .then(response => response.json())
-        .then(data => {
-            btnTts.disabled = false;
-            if (data.success && data.audioBase64) {
-                statusTts.innerText = "Đang phát âm thanh 🔊...";
-                
-                // Nạp trực tiếp dạng chuẩn Data URI để trình duyệt đọc liền mạch không qua phân đoạn rườm rà
-                audioTts.src = "data:audio/mp3;base64," + data.audioBase64;
-                audioTts.load();
-                
-                audioTts.play().catch(e => {
-                    console.error("Lỗi phát nhạc:", e);
-                    statusTts.innerText = "Trình duyệt chặn tự động phát!";
-                });
-                
-                audioTts.onended = () => {
-                    statusTts.innerText = "Đã phát xong!";
-                };
-            } else {
-                statusTts.innerText = "Lỗi: " + (data.message || "Không có dữ liệu âm thanh");
+    if (btnTts && inputTts && statusTts && audioTts) {
+        btnTts.addEventListener('click', () => {
+            const textToSpeak = inputTts.value.trim();
+            if (!textToSpeak) {
+                alert("Bạn chưa nhập chữ!");
+                return;
             }
-        })
-        .catch(error => {
-            btnTts.disabled = false;
-            console.error("Lỗi API Giọng nói:", error);
-            statusTts.innerText = "Lỗi kết nối đến Azure!";
-        });
-    });
-}
-// === CHỨC NĂNG COMPUTER VISION (PHÂN TÍCH ẢNH) ===
-const inputVision = document.getElementById('ai-vision-input');
-const btnVision = document.getElementById('ai-vision-btn');
-const previewVision = document.getElementById('ai-vision-preview');
-const statusVision = document.getElementById('ai-vision-status');
-const resultVision = document.getElementById('ai-vision-result');
 
-if (inputVision && btnVision) {
-    // Hiển thị ảnh ngay khi người dùng vừa chọn file
-    inputVision.addEventListener('change', function() {
-        const file = this.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                previewVision.src = e.target.result;
-                previewVision.style.display = 'inline-block';
-                resultVision.style.display = 'none';
-                statusVision.innerText = "";
-            }
-            reader.readAsDataURL(file);
-        }
-    });
+            statusTts.innerText = "Đang nhờ Azure tạo giọng nói...";
+            btnTts.disabled = true;
 
-    // Bấm nút để gửi lên Azure
-    btnVision.addEventListener('click', () => {
-        const file = inputVision.files[0];
-        if (!file) {
-            alert("Bạn chưa chọn ảnh nào!");
-            return;
-        }
-
-        statusVision.innerText = "Đang nhờ Azure phân tích ảnh... ⏳";
-        btnVision.disabled = true;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const base64Image = e.target.result;
-
-            // Đổi URL dưới đây thành URL đúng của Function App của bạn (nếu tên app khác)
-            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/AnalyzeImage', {
+            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/TextToSpeech', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ image: base64Image })
+                body: JSON.stringify({ text: textToSpeak })
             })
-            .then(res => res.json())
+            .then(response => response.json())
             .then(data => {
-                btnVision.disabled = false;
-                if (data.success) {
-                    statusVision.innerText = "Phân tích thành công! ✅";
-                    const visionData = data.data;
+                btnTts.disabled = false;
+                if (data.success && data.audioBase64) {
+                    statusTts.innerText = "Đang phát âm thanh 🔊...";
                     
-                    // Trích xuất mô tả (Caption)
-                    const caption = visionData.description && visionData.description.captions.length > 0 
-                                    ? visionData.description.captions[0].text 
-                                    : "Không tìm thấy mô tả.";
+                    audioTts.src = "data:audio/mp3;base64," + data.audioBase64;
+                    audioTts.load();
                     
-                    // Trích xuất từ khóa (Tags)
-                    const tags = visionData.tags ? visionData.tags.map(t => t.name).join(", ") : "Không có từ khóa.";
-
-                    resultVision.style.display = 'block';
-                    resultVision.innerHTML = `
-                        <strong>Mô tả (AI đoán):</strong> ${caption} <br><br>
-                        <strong>Từ khóa liên quan:</strong> ${tags}
-                    `;
+                    audioTts.play().catch(e => {
+                        console.error("Lỗi phát nhạc:", e);
+                        statusTts.innerText = "Trình duyệt chặn tự động phát!";
+                    });
+                    
+                    audioTts.onended = () => {
+                        statusTts.innerText = "Đã phát xong!";
+                    };
                 } else {
-                    statusVision.innerText = "Lỗi: " + data.message;
+                    statusTts.innerText = "Lỗi: " + (data.message || "Không có dữ liệu âm thanh");
                 }
             })
             .catch(error => {
-                btnVision.disabled = false;
-                console.error("Lỗi:", error);
-                statusVision.innerText = "Lỗi kết nối đến Server!";
+                btnTts.disabled = false;
+                console.error("Lỗi API Giọng nói:", error);
+                statusTts.innerText = "Lỗi kết nối đến Azure!";
             });
-        };
-        reader.readAsDataURL(file);
-    });
-}
+        });
+    }
+});
+
+// === CHỨC NĂNG COMPUTER VISION (PHÂN TÍCH ẢNH) ===
+window.addEventListener('DOMContentLoaded', () => {
+    const inputVision = document.getElementById('ai-vision-input');
+    const btnVision = document.getElementById('ai-vision-btn');
+    const previewVision = document.getElementById('ai-vision-preview');
+    const statusVision = document.getElementById('ai-vision-status');
+    const resultVision = document.getElementById('ai-vision-result');
+
+    if (inputVision && btnVision) {
+        // Hiển thị ảnh ngay khi người dùng vừa chọn file
+        inputVision.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewVision.src = e.target.result;
+                    previewVision.style.display = 'inline-block';
+                    resultVision.style.display = 'none';
+                    statusVision.innerText = "";
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Bấm nút để gửi lên Azure
+        btnVision.addEventListener('click', () => {
+            const file = inputVision.files[0];
+            if (!file) {
+                alert("Bạn chưa chọn ảnh nào!");
+                return;
+            }
+
+            statusVision.innerText = "Đang nhờ Azure phân tích ảnh... ⏳";
+            btnVision.disabled = true;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Image = e.target.result;
+
+                fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/AnalyzeImage', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: base64Image })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    btnVision.disabled = false;
+                    if (data.success) {
+                        statusVision.innerText = "Phân tích thành công! ✅";
+                        const visionData = data.data;
+                        
+                        const caption = visionData.description && visionData.description.captions.length > 0 
+                                        ? visionData.description.captions[0].text 
+                                        : "Không tìm thấy mô tả.";
+                        
+                        const tags = visionData.tags ? visionData.tags.map(t => t.name).join(", ") : "Không có từ khóa.";
+
+                        resultVision.style.display = 'block';
+                        resultVision.innerHTML = `
+                            <strong>Mô tả (AI đoán):</strong> ${caption} <br><br>
+                            <strong>Từ khóa liên quan:</strong> ${tags}
+                        `;
+                    } else {
+                        statusVision.innerText = "Lỗi: " + data.message;
+                    }
+                })
+                .catch(error => {
+                    btnVision.disabled = false;
+                    console.error("Lỗi:", error);
+                    statusVision.innerText = "Lỗi kết nối đến Server!";
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+});
