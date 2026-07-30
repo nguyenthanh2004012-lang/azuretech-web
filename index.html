@@ -166,6 +166,16 @@
         <p id="ai-lang-status" style="font-weight: bold; color: #d9534f; margin-top: 15px;"></p>
         <div id="ai-lang-result" style="text-align: left; background: #f8f9fa; color: #000; padding: 10px; border-radius: 5px; display: none;"></div>
     </div>
+    <!-- 7. Khung Test Azure AI Content Safety (Kiểm duyệt nội dung) -->
+    <div style="margin: 20px auto; max-width: 600px; padding: 20px; border: 2px dashed #ffc107; border-radius: 10px; text-align: center;">
+        <h3 style="color: #d39e00;">🛡️ AI Kiểm Duyệt & Lọc Nội Dung</h3>
+        <textarea id="ai-safety-input" rows="3" placeholder="Nhập một câu bất kỳ để AI kiểm tra từ ngữ độc hại/bạo lực..." style="width: 100%; padding: 10px; margin-bottom: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+        <br>
+        <button id="ai-safety-btn" style="background-color: #ffc107; color: #000; font-weight: bold; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Kiểm Tra An Toàn</button>
+        
+        <p id="ai-safety-status" style="font-weight: bold; color: #d9534f; margin-top: 15px;"></p>
+        <div id="ai-safety-result" style="text-align: left; background: #f8f9fa; color: #000; padding: 10px; border-radius: 5px; display: none;"></div>
+    </div>
     <!-- Script luôn phải đặt dưới cùng -->
     <script src="app.js"></script>
 </body>
