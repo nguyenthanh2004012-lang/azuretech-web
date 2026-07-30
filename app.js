@@ -490,14 +490,10 @@ window.addEventListener('DOMContentLoaded', () => {
                         
                         let htmlResult = "";
                         faceData.forEach((face, index) => {
-                            const attrs = face.faceAttributes;
-                            const glasses = attrs.glasses !== "NoGlasses" ? "Có đeo kính 👓" : "Không đeo kính";
-                            const mask = attrs.mask && attrs.mask.type !== "noMask" ? "Có đeo khẩu trang 😷" : "Không khẩu trang";
-                            
                             htmlResult += `
                                 <div style="margin-bottom: 10px; padding: 10px; border-bottom: 1px solid #ccc;">
-                                    <strong style="color: #6f42c1;">Khuôn mặt ${index + 1}:</strong><br>
-                                    - Phụ kiện: ${glasses}, ${mask} <br>
+                                    <strong style="color: #6f42c1;">Khuôn mặt ${index + 1}</strong><br>
+                                    - Trạng thái: Đã định vị thành công <br>
                                     - ID nội bộ Azure: <span style="font-size: 11px; color: gray;">${face.faceId}</span>
                                 </div>
                             `;
