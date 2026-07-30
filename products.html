@@ -10,6 +10,59 @@
     <style>
         .product-img { background: transparent; display:flex; align-items:center; justify-content:center; padding: 20px;}
         .product-img img { object-fit: contain;}
+        
+        /* CSS cho phần khung Bình luận */
+        .comments-section {
+            max-width: 800px;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .comments-section h3 {
+            margin-bottom: 20px;
+            color: #1e293b;
+            font-size: 22px;
+        }
+        .comment-form .form-group {
+            margin-bottom: 15px;
+        }
+        .comment-form input, .comment-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .comment-form input:focus, .comment-form textarea:focus {
+            border-color: #3b82f6;
+        }
+        .comment-form textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .btn-submit-comment {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-submit-comment:hover {
+            background-color: #2563eb;
+        }
+        #comment-status {
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -148,6 +201,23 @@
         </div>
     </section>
 
+    <!-- Phần Bình Luận (Comments Section) -->
+    <section class="container">
+        <div class="comments-section reveal">
+            <h3>💬 Đánh giá & Bình luận sản phẩm</h3>
+            <form id="comment-form" class="comment-form">
+                <div class="form-group">
+                    <input type="text" id="userName" placeholder="Họ tên của bạn..." required>
+                </div>
+                <div class="form-group">
+                    <textarea id="commentText" placeholder="Nhập nội dung bình luận của bạn..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit-comment">Gửi Bình Luận</button>
+                <p id="comment-status"></p>
+            </form>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="footer reveal">
         <div class="container footer-content">
@@ -162,5 +232,51 @@
     <div id="toast" class="toast">Đã thêm vào giỏ hàng!</div>
 
     <script src="app.js"></script>
+    
+    <!-- Script xử lý gửi bình luận xuống API của Giang trên Azure -->
+    <script>
+        const commentForm = document.getElementById('comment-form');
+        const commentStatus = document.getElementById('comment-status');
+
+        commentForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const userName = document.getElementById('userName').value;
+            const commentText = document.getElementById('comment-text') || document.getElementById('commentText').value;
+            // Xử lý lấy đúng ID trường nội dung bình luận
+            const textValue = document.getElementById('commentText').value;
+
+            commentStatus.style.color = '#3b82f6';
+            commentStatus.innerText = 'Đang gửi bình luận lên hệ thống...';
+
+            try {
+                const response = await fetch('https://api-giang-dmfrcsbde0erf8d9.southeastasia-01.azurewebsites.net/api/comments', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        userName: userName,
+                        commentText: textValue
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    commentStatus.style.color = '#10b981';
+                    commentStatus.innerText = 'Đã gửi bình luận thành công lên Database!';
+                    commentForm.reset();
+                } else {
+                    commentStatus.style.color = '#ef4444';
+                    commentStatus.innerText = 'Lỗi: ' + (data.error || 'Không thể lưu bình luận');
+                }
+            } catch (err) {
+                commentStatus.style.color = '#ef4444';
+                commentStatus.innerText = 'Lỗi kết nối đến server Azure!';
+                console.error(err);
+            }
+        });
+    </script>
 </body>
 </html>
