@@ -335,3 +335,80 @@ if (btnTts && inputTts && statusTts && audioTts) {
         });
     });
 }
+// === CHỨC NĂNG COMPUTER VISION (PHÂN TÍCH ẢNH) ===
+const inputVision = document.getElementById('ai-vision-input');
+const btnVision = document.getElementById('ai-vision-btn');
+const previewVision = document.getElementById('ai-vision-preview');
+const statusVision = document.getElementById('ai-vision-status');
+const resultVision = document.getElementById('ai-vision-result');
+
+if (inputVision && btnVision) {
+    // Hiển thị ảnh ngay khi người dùng vừa chọn file
+    inputVision.addEventListener('change', function() {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewVision.src = e.target.result;
+                previewVision.style.display = 'inline-block';
+                resultVision.style.display = 'none';
+                statusVision.innerText = "";
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Bấm nút để gửi lên Azure
+    btnVision.addEventListener('click', () => {
+        const file = inputVision.files[0];
+        if (!file) {
+            alert("Bạn chưa chọn ảnh nào!");
+            return;
+        }
+
+        statusVision.innerText = "Đang nhờ Azure phân tích ảnh... ⏳";
+        btnVision.disabled = true;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const base64Image = e.target.result;
+
+            // Đổi URL dưới đây thành URL đúng của Function App của bạn (nếu tên app khác)
+            fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/AnalyzeImage', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: base64Image })
+            })
+            .then(res => res.json())
+            .then(data => {
+                btnVision.disabled = false;
+                if (data.success) {
+                    statusVision.innerText = "Phân tích thành công! ✅";
+                    const visionData = data.data;
+                    
+                    // Trích xuất mô tả (Caption)
+                    const caption = visionData.description && visionData.description.captions.length > 0 
+                                    ? visionData.description.captions[0].text 
+                                    : "Không tìm thấy mô tả.";
+                    
+                    // Trích xuất từ khóa (Tags)
+                    const tags = visionData.tags ? visionData.tags.map(t => t.name).join(", ") : "Không có từ khóa.";
+
+                    resultVision.style.display = 'block';
+                    resultVision.innerHTML = `
+                        <strong>Mô tả (AI đoán):</strong> ${caption} <br><br>
+                        <strong>Từ khóa liên quan:</strong> ${tags}
+                    `;
+                } else {
+                    statusVision.innerText = "Lỗi: " + data.message;
+                }
+            })
+            .catch(error => {
+                btnVision.disabled = false;
+                console.error("Lỗi:", error);
+                statusVision.innerText = "Lỗi kết nối đến Server!";
+            });
+        };
+        reader.readAsDataURL(file);
+    });
+}
