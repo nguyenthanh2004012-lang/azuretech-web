@@ -340,7 +340,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// === CHỨC NĂNG COMPUTER VISION (PHÂN TÍCH ẢNH) ===
+// === CHỨC NĂNG COMPUTER VISION (PHÂN TÍCH ẢNH) - CHỤP X-QUANG LỖI ===
 window.addEventListener('DOMContentLoaded', () => {
     const inputVision = document.getElementById('ai-vision-input');
     const btnVision = document.getElementById('ai-vision-btn');
@@ -385,99 +385,14 @@ window.addEventListener('DOMContentLoaded', () => {
                 .then(res => res.json())
                 .then(data => {
                     btnVision.disabled = false;
-                    if (data.success) {
-                        const visionData = data.data;
-                        
-                        // --- ĐÂY LÀ KHÚC BẮT LỖI NGẦM TỪ AZURE ---
-                        if (visionData.error) {
-                            statusVision.innerText = "Azure từ chối phân tích! ❌";
-                            resultVision.style.display = 'block';
-                            resultVision.innerHTML = `<strong style="color:red;">Lỗi từ Azure:</strong> <span style="color:red;">${visionData.error.message || JSON.stringify(visionData.error)}</span>`;
-                            return;
-                        }
-
-                        statusVision.innerText = "Phân tích thành công! ✅";
-                        const caption = visionData.description && visionData.description.captions.length > 0 
-                                        ? visionData.description.captions[0].text 
-                                        : "Không tìm thấy mô tả.";
-                        
-                        const tags = visionData.tags ? visionData.tags.map(t => t.name).join(", ") : "Không có từ khóa.";
-
-                        resultVision.style.display = 'block';
-                        resultVision.innerHTML = `
-                            <strong>Mô tả (AI đoán):</strong> ${caption} <br><br>
-                            <strong>Từ khóa liên quan:</strong> ${tags}
-                        `;
-                    } else {
-                        statusVision.innerText = "Lỗi: " + data.message;
-                    }
-                })
-                .catch(error => {
-                    btnVision.disabled = false;
-                    console.error("Lỗi:", error);
-                    statusVision.innerText = "Lỗi kết nối đến Server!";
-                });
-            };
-            reader.readAsDataURL(file);
-        });
-    }
-});
-        // Hiển thị ảnh ngay khi người dùng vừa chọn file
-        inputVision.addEventListener('change', function() {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewVision.src = e.target.result;
-                    previewVision.style.display = 'inline-block';
-                    resultVision.style.display = 'none';
-                    statusVision.innerText = "";
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-
-        // Bấm nút để gửi lên Azure
-        btnVision.addEventListener('click', () => {
-            const file = inputVision.files[0];
-            if (!file) {
-                alert("Bạn chưa chọn ảnh nào!");
-                return;
-            }
-
-            statusVision.innerText = "Đang nhờ Azure phân tích ảnh... ⏳";
-            btnVision.disabled = true;
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const base64Image = e.target.result;
-
-                fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/AnalyzeImage', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ image: base64Image })
-                })
-                .then(res => res.json())
-                .then(data => {
-                    btnVision.disabled = false;
-                    if (data.success) {
-                        statusVision.innerText = "Phân tích thành công! ✅";
-                        const visionData = data.data;
-                        
-                        const caption = visionData.description && visionData.description.captions.length > 0 
-                                        ? visionData.description.captions[0].text 
-                                        : "Không tìm thấy mô tả.";
-                        
-                        const tags = visionData.tags ? visionData.tags.map(t => t.name).join(", ") : "Không có từ khóa.";
-
-                        resultVision.style.display = 'block';
-                        resultVision.innerHTML = `
-                            <strong>Mô tả (AI đoán):</strong> ${caption} <br><br>
-                            <strong>Từ khóa liên quan:</strong> ${tags}
-                        `;
-                    } else {
-                        statusVision.innerText = "Lỗi: " + data.message;
-                    }
+                    statusVision.innerText = "Phân tích xong! Đang xem mã gốc 🔍";
+                    
+                    // In TOÀN BỘ dữ liệu gốc ra màn hình để bắt bệnh
+                    resultVision.style.display = 'block';
+                    resultVision.innerHTML = `
+                        <p style="color:red; font-weight:bold;">Dữ liệu gốc từ Azure (Chụp màn hình cái này nha):</p>
+                        <pre style="background:#222; color:#0f0; padding:10px; border-radius:5px; font-size:12px; overflow-x:auto; text-align:left;">${JSON.stringify(data.data, null, 2)}</pre>
+                    `;
                 })
                 .catch(error => {
                     btnVision.disabled = false;
