@@ -490,11 +490,12 @@ window.addEventListener('DOMContentLoaded', () => {
                         
                         let htmlResult = "";
                         faceData.forEach((face, index) => {
+                            const rect = face.faceRectangle;
                             htmlResult += `
                                 <div style="margin-bottom: 10px; padding: 10px; border-bottom: 1px solid #ccc;">
                                     <strong style="color: #6f42c1;">Khuôn mặt ${index + 1}</strong><br>
                                     - Trạng thái: Đã định vị thành công <br>
-                                    - ID nội bộ Azure: <span style="font-size: 11px; color: gray;">${face.faceId}</span>
+                                    - Khung tọa độ: Rộng ${rect.width}px, Cao ${rect.height}px
                                 </div>
                             `;
                         });
