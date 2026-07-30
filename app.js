@@ -426,3 +426,96 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// === CHỨC NĂNG FACE API (NHẬN DIỆN KHUÔN MẶT) ===
+window.addEventListener('DOMContentLoaded', () => {
+    const inputFace = document.getElementById('ai-face-input');
+    const btnFace = document.getElementById('ai-face-btn');
+    const previewFace = document.getElementById('ai-face-preview');
+    const statusFace = document.getElementById('ai-face-status');
+    const resultFace = document.getElementById('ai-face-result');
+
+    if (inputFace && btnFace) {
+        inputFace.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewFace.src = e.target.result;
+                    previewFace.style.display = 'inline-block';
+                    resultFace.style.display = 'none';
+                    statusFace.innerText = "";
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        btnFace.addEventListener('click', () => {
+            const file = inputFace.files[0];
+            if (!file) {
+                alert("Bạn chưa chọn ảnh nào!");
+                return;
+            }
+
+            statusFace.innerText = "Đang nhờ Azure quét khuôn mặt... ⏳";
+            btnFace.disabled = true;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const base64Image = e.target.result;
+
+                fetch('https://api-truong-2026-ddcwf5eadbfnh4a9.southeastasia-01.azurewebsites.net/api/AnalyzeFace', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ image: base64Image })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    btnFace.disabled = false;
+                    if (data.success) {
+                        const faceData = data.data;
+                        
+                        if (faceData.error) {
+                            statusFace.innerText = "Azure từ chối phân tích! ❌";
+                            resultFace.style.display = 'block';
+                            resultFace.innerHTML = `<strong style="color:red;">Lỗi từ Azure:</strong> <span style="color:red;">${faceData.error.message || JSON.stringify(faceData.error)}</span>`;
+                            return;
+                        }
+
+                        if (!faceData || faceData.length === 0) {
+                            statusFace.innerText = "Không tìm thấy khuôn mặt nào trong ảnh! 🕵️‍♂️";
+                            return;
+                        }
+
+                        statusFace.innerText = `Phân tích thành công! Phát hiện ${faceData.length} khuôn mặt ✅`;
+                        
+                        let htmlResult = "";
+                        faceData.forEach((face, index) => {
+                            const attrs = face.faceAttributes;
+                            const glasses = attrs.glasses !== "NoGlasses" ? "Có đeo kính 👓" : "Không đeo kính";
+                            const mask = attrs.mask && attrs.mask.type !== "noMask" ? "Có đeo khẩu trang 😷" : "Không khẩu trang";
+                            
+                            htmlResult += `
+                                <div style="margin-bottom: 10px; padding: 10px; border-bottom: 1px solid #ccc;">
+                                    <strong style="color: #6f42c1;">Khuôn mặt ${index + 1}:</strong><br>
+                                    - Phụ kiện: ${glasses}, ${mask} <br>
+                                    - ID nội bộ Azure: <span style="font-size: 11px; color: gray;">${face.faceId}</span>
+                                </div>
+                            `;
+                        });
+
+                        resultFace.style.display = 'block';
+                        resultFace.innerHTML = htmlResult;
+                    } else {
+                        statusFace.innerText = "Lỗi: " + data.message;
+                    }
+                })
+                .catch(error => {
+                    btnFace.disabled = false;
+                    console.error("Lỗi:", error);
+                    statusFace.innerText = "Lỗi kết nối đến Server!";
+                });
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+});
