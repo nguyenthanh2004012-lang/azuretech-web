@@ -142,7 +142,20 @@
     <div style="margin: 40px auto; max-width: 400px; border: 2px solid #28a745; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
         <iframe src='https://webchat.botframework.com/embed/bot-azuretech?s=hiogvhuzDUhZBUsJgiypUReeIhQRD12abZieoOz7IFjq7HdGzWy7JQQJ99CGAC24pbEAArohAAABAZBSJq2n.EiSR3Vtw3D9Hi50K24qQf7vC8OYv5XewesQRpDKx1dYpSX22ANV2JQQJ99CGAC24pbEAArohAAABAZBS4Syk' style='min-width: 400px; width: 100%; min-height: 500px; border: none;'></iframe>
     </div>
-
+<!-- 5. Khung Test Nhận Diện Khuôn Mặt (Face API) -->
+    <div style="margin: 20px auto; max-width: 600px; padding: 20px; border: 2px dashed #6f42c1; border-radius: 10px; text-align: center;">
+        <h3 style="color: #6f42c1;">🧑 AI Nhận Diện Khuôn Mặt</h3>
+        <input type="file" id="ai-face-input" accept="image/*" style="margin-bottom: 10px;">
+        <br>
+        <button id="ai-face-btn" style="background-color: #6f42c1; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer;">Quét Khuôn Mặt</button>
+        
+        <div style="margin-top: 15px;">
+            <img id="ai-face-preview" src="" style="max-width: 100%; max-height: 300px; display: none; border-radius: 5px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+        </div>
+        
+        <p id="ai-face-status" style="font-weight: bold; color: #d9534f; margin-top: 15px;"></p>
+        <div id="ai-face-result" style="text-align: left; background: #f8f9fa; color: #000; padding: 10px; border-radius: 5px; display: none;"></div>
+    </div>
     <!-- Script luôn phải đặt dưới cùng -->
     <script src="app.js"></script>
 </body>
