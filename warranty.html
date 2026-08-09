@@ -76,12 +76,11 @@
     </footer>
 
     <script src="app.js"></script>
-    <script>
+   <script>
         const invoiceInput = document.getElementById('invoiceInput');
         const invoicePreview = document.getElementById('invoicePreview');
         const btnScanAI = document.getElementById('btnScanAI');
         const scanStatus = document.getElementById('scanStatus');
-        let base64Image = "";
 
         // Hiển thị ảnh khi chọn file
         invoiceInput.addEventListener('change', function() {
@@ -89,8 +88,7 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    base64Image = e.target.result;
-                    invoicePreview.src = base64Image;
+                    invoicePreview.src = e.target.result;
                     invoicePreview.style.display = 'block';
                     btnScanAI.style.display = 'inline-block';
                     scanStatus.innerText = "";
@@ -104,45 +102,54 @@
             }
         });
 
-        // Xử lý gửi ảnh lên API Azure Form Recognizer (Chờ Backend cung cấp link)
+        // Xử lý gửi ảnh lên API Azure Form Recognizer bằng FormData
         btnScanAI.addEventListener('click', async () => {
+            const file = invoiceInput.files[0];
+            if (!file) {
+                scanStatus.innerText = "Vui lòng chọn ảnh hóa đơn trước!";
+                scanStatus.style.color = "#ef4444";
+                return;
+            }
+
             scanStatus.innerText = "Đang đẩy lên Azure Document Intelligence để phân tích... ⏳";
             scanStatus.style.color = "#f59e0b";
             btnScanAI.disabled = true;
 
             try {
-                // ĐÂY LÀ CHỖ GẮN LINK API CỦA NHÓM VÀO:
-                const apiUrl = 'https://link-api-cua-giang-hoac-lam.azurewebsites.net/api/scan-invoice';
+                // Link API chuẩn do Lâm cung cấp
+                const apiUrl = 'https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api/scan-invoice';
                 
-                // Tạm thời mô phỏng quá trình AI đọc chữ (vì chưa có link API thật)
-                setTimeout(() => {
+                // Đóng gói file ảnh vào FormData theo đúng field 'invoiceImage'
+                const formData = new FormData();
+                formData.append("invoiceImage", file);
+
+                // Gửi request lên server
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    // LƯU Ý: Không set headers 'Content-Type' ở đây, trình duyệt sẽ tự động xử lý boundary cho FormData
+                    body: formData
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
                     scanStatus.innerText = "Trích xuất thông tin thành công! ✅";
                     scanStatus.style.color = "#10b981";
                     
-                    // Giả lập kết quả AI trả về điền vào form
-                    document.getElementById('customerName').value = "Nguyễn Văn A";
-                    document.getElementById('productCode').value = "MacBook Pro M3 - MBP2024-X9";
-                    document.getElementById('purchaseDate').value = "15/08/2026";
-                    
-                    btnScanAI.disabled = false;
-                }, 2500);
-
-                /* CODE THẬT (Mở comment ra xài khi có link API):
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ image: base64Image })
-                });
-                const data = await response.json();
-                
-                document.getElementById('customerName').value = data.customerName;
-                document.getElementById('productCode').value = data.productName;
-                document.getElementById('purchaseDate').value = data.date;
-                */
+                    // Điền dữ liệu thật từ API trả về vào form
+                    // (Lưu ý: Tên biến data.customerName... có thể cần điều chỉnh nếu Lâm đặt tên key khác trong JSON)
+                    document.getElementById('customerName').value = data.customerName || "Không xác định";
+                    document.getElementById('productCode').value = data.productName || data.productCode || "Không xác định";
+                    document.getElementById('purchaseDate').value = data.date || data.purchaseDate || "Không xác định";
+                } else {
+                    scanStatus.innerText = "AI không đọc được ảnh này hoặc server lỗi. Vui lòng thử lại!";
+                    scanStatus.style.color = "#ef4444";
+                }
 
             } catch (error) {
-                scanStatus.innerText = "Lỗi kết nối tới Server AI!";
+                scanStatus.innerText = "Lỗi kết nối tới Server AI của Lâm!";
                 scanStatus.style.color = "#ef4444";
+                console.error("Chi tiết lỗi:", error);
+            } finally {
                 btnScanAI.disabled = false;
             }
         });
