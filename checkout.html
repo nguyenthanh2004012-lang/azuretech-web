@@ -139,7 +139,7 @@
                 const userName = (nameInput && nameInput.value.trim() !== "") ? nameInput.value : "Nguyễn Nhật Trường";
                 
                 // Email mặc định để test hệ thống gửi mail tự động về mây
-                const userEmail = "nhap_email_that_cua_ong@gmail.com"; 
+                const userEmail = "mongthanh010502@gmail.com"; 
 
                 // Gửi request trực tiếp tới Azure Logic App
                 fetch('https://prod-23.southeastasia.logic.azure.com:443/workflows/0aaf6c24ffe44034ab9d9b3818c7a13a/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=hggpoKIdk0n_rSv0rGUUUoHKp-0MB91PSHeNo2pXhWw', {
