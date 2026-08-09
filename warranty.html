@@ -76,7 +76,7 @@
     </footer>
 
     <script src="app.js"></script>
-   <script>
+  <script>
         const invoiceInput = document.getElementById('invoiceInput');
         const invoicePreview = document.getElementById('invoicePreview');
         const btnScanAI = document.getElementById('btnScanAI');
@@ -116,30 +116,58 @@
             btnScanAI.disabled = true;
 
             try {
-                // Link API chuẩn do Lâm cung cấp
                 const apiUrl = 'https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api/scan-invoice';
                 
-                // Đóng gói file ảnh vào FormData theo đúng field 'invoiceImage'
                 const formData = new FormData();
                 formData.append("invoiceImage", file);
 
-                // Gửi request lên server
                 const response = await fetch(apiUrl, {
                     method: 'POST',
-                    // LƯU Ý: Không set headers 'Content-Type' ở đây, trình duyệt sẽ tự động xử lý boundary cho FormData
                     body: formData
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    scanStatus.innerText = "Trích xuất thông tin thành công! ✅";
-                    scanStatus.style.color = "#10b981";
                     
-                    // Điền dữ liệu thật từ API trả về vào form
-                    // (Lưu ý: Tên biến data.customerName... có thể cần điều chỉnh nếu Lâm đặt tên key khác trong JSON)
-                    document.getElementById('customerName').value = data.customerName || "Không xác định";
-                    document.getElementById('productCode').value = data.productName || data.productCode || "Không xác định";
-                    document.getElementById('purchaseDate').value = data.date || data.purchaseDate || "Không xác định";
+                    if (data.success) {
+                        scanStatus.innerText = "Trích xuất thông tin thành công! ✅";
+                        scanStatus.style.color = "#10b981";
+                        
+                        const extracted = data.extractedFields;
+
+                        // 1. Lấy tên Khách hàng (Đổi dấu xuống dòng thành dấu gạch ngang cho đẹp)
+                        let cusName = "Không xác định";
+                        if (extracted && extracted.CustomerName && extracted.CustomerName.valueString) {
+                            cusName = extracted.CustomerName.valueString.replace(/\n/g, ' - ');
+                        }
+
+                        // 2. Lấy Ngày mua
+                        let pDate = "Không xác định";
+                        if (extracted && extracted.InvoiceDate && extracted.InvoiceDate.content) {
+                            pDate = extracted.InvoiceDate.content;
+                        }
+
+                        // 3. Lấy Danh sách Sản phẩm (Gom tất cả tên sản phẩm lại)
+                        let pCode = "Không xác định";
+                        if (extracted && extracted.Items && extracted.Items.valueArray) {
+                            const itemsList = extracted.Items.valueArray.map(item => {
+                                return item.valueObject && item.valueObject.Description ? item.valueObject.Description.valueString : "";
+                            }).filter(name => name !== "");
+                            
+                            if (itemsList.length > 0) {
+                                pCode = itemsList.join(", "); // Trả ra: "Máy tính Lenovo, Máy tỉnh Dell"
+                            }
+                        }
+                        
+                        // Đổ dữ liệu vào Form
+                        document.getElementById('customerName').value = cusName;
+                        document.getElementById('purchaseDate').value = pDate;
+                        document.getElementById('productCode').value = pCode;
+                    } else {
+                        scanStatus.innerText = "Lỗi từ server: " + (data.message || "Không thể xử lý ảnh.");
+                        scanStatus.style.color = "#ef4444";
+                    }
+
                 } else {
                     scanStatus.innerText = "AI không đọc được ảnh này hoặc server lỗi. Vui lòng thử lại!";
                     scanStatus.style.color = "#ef4444";
