@@ -134,11 +134,11 @@
         
         if (checkoutBtn) {
             checkoutBtn.addEventListener("click", function (e) {
-                // Lấy thông tin Họ và tên từ ô input đầu tiên trong form giao hàng
+                // Lấy tên khách hàng từ ô input đầu tiên
                 const nameInput = document.querySelector(".checkout-form input[type='text']");
                 const userName = (nameInput && nameInput.value.trim() !== "") ? nameInput.value : "Nguyễn Nhật Trường";
                 
-                // Email mặc định để test hệ thống gửi mail tự động về mây
+                // Email nhận thông báo (Điền email thật của ông vào đây để nhận demo)
                 const userEmail = "mongthanh010502@gmail.com"; 
 
                 // Gửi request trực tiếp tới Azure Logic App
@@ -152,7 +152,7 @@
                 })
                 .then(response => {
                     console.log("Đã kích hoạt Azure Logic App gửi email thành công!");
-                    alert("Đặt hàng thành công! Hệ thống mây đã kích hoạt gửi email xác nhận.");
+                    alert("Đặt hàng thành công! Hệ thống mây đã kích hoạt gửi email xác nhận về hộp thư.");
                 })
                 .catch(error => {
                     console.error("Lỗi gọi API:", error);
