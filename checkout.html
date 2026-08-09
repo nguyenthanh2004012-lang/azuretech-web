@@ -128,18 +128,20 @@
     </footer>
 
     <script src="app.js"></script>
-    <script>
-    // Gắn sự kiện này vào nút hoàn tất thanh toán của ông (ví dụ nút có id là "submit-order")
+   <script>
     document.addEventListener("DOMContentLoaded", function () {
-        const checkoutBtn = document.querySelector("#submit-order") || document.querySelector("button[type='submit']");
+        const checkoutBtn = document.querySelector("#btn-submit-order");
         
         if (checkoutBtn) {
             checkoutBtn.addEventListener("click", function (e) {
-                // Lấy thông tin email và tên từ form thanh toán của trang web
-                const userEmail = document.querySelector("#email") ? document.querySelector("#email").value : "khachhang@gmail.com";
-                const userName = document.querySelector("#name") ? document.querySelector("#name").value : "Nguyễn Nhật Trường";
+                // Lấy thông tin Họ và tên từ ô input đầu tiên trong form giao hàng
+                const nameInput = document.querySelector(".checkout-form input[type='text']");
+                const userName = (nameInput && nameInput.value.trim() !== "") ? nameInput.value : "Nguyễn Nhật Trường";
+                
+                // Email mặc định để test hệ thống gửi mail tự động về mây
+                const userEmail = "nhap_email_that_cua_ong@gmail.com"; 
 
-                // Gửi request tới Azure Logic App vừa tạo
+                // Gửi request trực tiếp tới Azure Logic App
                 fetch('https://prod-23.southeastasia.logic.azure.com:443/workflows/0aaf6c24ffe44034ab9d9b3818c7a13a/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=hggpoKIdk0n_rSv0rGUUUoHKp-0MB91PSHeNo2pXhWw', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -148,8 +150,14 @@
                         name: userName 
                     })
                 })
-                .then(response => console.log("Đã kích hoạt Azure Logic App gửi email thành công!"))
-                .catch(error => console.error("Lỗi gọi API:", error));
+                .then(response => {
+                    console.log("Đã kích hoạt Azure Logic App gửi email thành công!");
+                    alert("Đặt hàng thành công! Hệ thống mây đã kích hoạt gửi email xác nhận.");
+                })
+                .catch(error => {
+                    console.error("Lỗi gọi API:", error);
+                    alert("Có lỗi xảy ra khi kết nối với Azure!");
+                });
             });
         }
     });
