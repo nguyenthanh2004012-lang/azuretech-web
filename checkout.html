@@ -48,6 +48,10 @@
                 <div class="form-group">
                     <label>Số điện thoại</label>
                     <input type="tel" placeholder="Nhập số điện thoại...">
+                    <div class="form-group">
+    <label>Email nhận xác nhận đơn hàng</label>
+    <input type="email" id="customer-email" placeholder="Nhập địa chỉ email...">
+</div>
                 </div>
                 <div class="form-group">
                     <label>Địa chỉ nhận hàng</label>
@@ -134,12 +138,13 @@
         
         if (checkoutBtn) {
             checkoutBtn.addEventListener("click", function (e) {
-                // Lấy tên khách hàng từ ô input đầu tiên
+                // Lấy tên khách hàng từ ô input Họ và Tên
                 const nameInput = document.querySelector(".checkout-form input[type='text']");
                 const userName = (nameInput && nameInput.value.trim() !== "") ? nameInput.value : "Nguyễn Nhật Trường";
                 
-                // Email nhận thông báo (Điền email thật của ông vào đây để nhận demo)
-                const userEmail = "mongthanh010502@gmail.com"; 
+                // Lấy email chính xác do khách hàng vừa gõ vào ô input mới thêm
+                const emailInput = document.querySelector("#customer-email");
+                const userEmail = (emailInput && emailInput.value.trim() !== "") ? emailInput.value : "mongthanh010502@gmail.com"; 
 
                 // Gửi request trực tiếp tới Azure Logic App
                 fetch('https://prod-23.southeastasia.logic.azure.com:443/workflows/0aaf6c24ffe44034ab9d9b3818c7a13a/triggers/When_an_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_an_HTTP_request_is_received%2Frun&sv=1.0&sig=hggpoKIdk0n_rSv0rGUUUoHKp-0MB91PSHeNo2pXhWw', {
@@ -152,7 +157,7 @@
                 })
                 .then(response => {
                     console.log("Đã kích hoạt Azure Logic App gửi email thành công!");
-                    alert("Đặt hàng thành công! Hệ thống mây đã kích hoạt gửi email xác nhận về hộp thư.");
+                    alert("Đặt hàng thành công! Email xác nhận đã được gửi đến " + userEmail);
                 })
                 .catch(error => {
                     console.error("Lỗi gọi API:", error);
