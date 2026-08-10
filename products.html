@@ -67,10 +67,18 @@
                 <i class="fa-solid fa-cloud"></i>
                 <span>AzureTech</span>
             </a>
-            <div class="search-bar">
-                <input type="text" placeholder="Tìm kiếm sản phẩm...">
+            
+            <!-- THANH TÌM KIẾM AI (Tích hợp API của Lâm) -->
+            <div class="search-bar" style="position: relative;">
+                <input type="text" id="aiSearchBox" placeholder="Tìm kiếm Laptop, iPhone..." oninput="autoSuggest()" autocomplete="off">
                 <button><i class="fa-solid fa-magnifying-glass"></i></button>
+                
+                <!-- Hộp thoại xổ xuống chứa kết quả -->
+                <div id="suggestBox" style="position: absolute; top: 100%; left: 0; width: 100%; background: #1e293b; border: 1px solid #334155; display: none; z-index: 9999; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border-radius: 8px; margin-top: 8px; max-height: 350px; overflow-y: auto; text-align: left;">
+                    <!-- Kết quả sẽ được nhét vào đây bằng JS -->
+                </div>
             </div>
+            
             <nav class="nav-links">
                 <a href="index.html">Trang Chủ</a>
                 <a href="products.html" class="active">Sản Phẩm</a>
@@ -117,8 +125,9 @@
         </div>
         
         <div class="product-grid">
-            <!-- Product 1 -->
+            <!-- Product 1 (Đã Tích Hợp Dịch Vụ Azure) -->
             <div class="product-card reveal">
+                <!-- AZURE WEB PUBSUB: Realtime Viewers -->
                 <div class="live-badge"><div class="pulse"></div> <span id="viewer-1">12</span> người đang xem</div>
                 
                 <div class="product-img"><img src="img/macbook.svg" alt="Macbook"></div>
@@ -129,6 +138,7 @@
                         <span class="price">$1,999.00</span>
                         <button class="btn-add-cart" data-name="MacBook Pro 14" data-price="1999.00" data-img="img/macbook.svg"><i class="fa-solid fa-plus"></i></button>
                     </div>
+                    <!-- NÚT CHỨC NĂNG AZURE (CỦA GIANG) -->
                     <div class="azure-actions">
                         <button class="btn-azure btn-reader" onclick="startImmersiveReader('title-1', 'Laptop cao cấp trang bị chip M3 siêu tốc.')"><i class="fa-solid fa-book-reader"></i> Đọc AI</button>
                         <button class="btn-azure btn-event" onclick="triggerEventGrid('MacBook Pro 14')"><i class="fa-solid fa-triangle-exclamation"></i> Hết hàng</button>
@@ -137,8 +147,9 @@
                 </div>
             </div>
 
-            <!-- Product 2 -->
+            <!-- Product 2 (Đã Tích Hợp Dịch Vụ Azure) -->
             <div class="product-card reveal">
+                <!-- AZURE WEB PUBSUB: Realtime Viewers -->
                 <div class="live-badge"><div class="pulse"></div> <span id="viewer-2">5</span> người đang xem</div>
 
                 <div class="product-img"><img src="img/dell.svg" alt="Dell XPS"></div>
@@ -149,6 +160,7 @@
                         <span class="price">$1,750.00</span>
                         <button class="btn-add-cart" data-name="Dell XPS 15" data-price="1750.00" data-img="img/dell.svg"><i class="fa-solid fa-plus"></i></button>
                     </div>
+                    <!-- NÚT CHỨC NĂNG AZURE (CỦA GIANG) -->
                     <div class="azure-actions">
                         <button class="btn-azure btn-reader" onclick="startImmersiveReader('title-2', 'Màn hình OLED viền siêu mỏng, hoàn hảo cho đồ họa.')"><i class="fa-solid fa-book-reader"></i> Đọc AI</button>
                         <button class="btn-azure btn-event" onclick="triggerEventGrid('Dell XPS 15')"><i class="fa-solid fa-triangle-exclamation"></i> Hết hàng</button>
@@ -432,6 +444,56 @@
             } finally {
                 btnSubmit.disabled = false;
                 btnSubmit.style.opacity = '1';
+            }
+        });
+    </script>
+    
+    <!-- SCRIPT TÌM KIẾM AI (CỦA LÂM) -->
+    <script>
+        async function autoSuggest() {
+            const query = document.getElementById('aiSearchBox').value;
+            const suggestBox = document.getElementById('suggestBox');
+
+            // Khách gõ từ 2 chữ trở lên mới bắt đầu tìm
+            if(query.length < 2) {
+                suggestBox.style.display = 'none';
+                return;
+            }
+
+            try {
+                // Gọi API từ Backend của Lâm
+                const res = await fetch(`https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api/search?q=${query}`);
+                const json = await res.json();
+
+                if(json.success && json.data.length > 0) {
+                    let html = '';
+                    json.data.forEach(item => {
+                        // Hiển thị tên sản phẩm và giá tiền (CSS đồng bộ với Dark Theme)
+                        html += `
+                            <div style="padding: 12px 15px; border-bottom: 1px solid #334155; cursor: pointer; transition: 0.2s;" 
+                                 onmouseover="this.style.background='#334155'" 
+                                 onmouseout="this.style.background='transparent'">
+                                <strong style="color: #f8fafc; font-size: 0.95rem;">${item.TenSanPham}</strong><br>
+                                <small style="color: #38bdf8; font-weight: 600; font-size: 0.85rem;">${item.Gia} VNĐ</small>
+                            </div>`;
+                    });
+                    suggestBox.innerHTML = html;
+                    suggestBox.style.display = 'block';
+                } else {
+                    suggestBox.innerHTML = `<div style="padding: 15px; color: #94a3b8; font-size: 0.9rem; text-align: center;">Không tìm thấy sản phẩm phù hợp...</div>`;
+                    suggestBox.style.display = 'block';
+                }
+            } catch (error) {
+                console.error("Lỗi gọi API tìm kiếm:", error);
+            }
+        }
+
+        // Tự động ẩn hộp tìm kiếm khi click ra ngoài màn hình
+        document.addEventListener('click', function(event) {
+            const searchBox = document.getElementById('aiSearchBox');
+            const suggestBox = document.getElementById('suggestBox');
+            if (!searchBox.contains(event.target) && !suggestBox.contains(event.target)) {
+                suggestBox.style.display = 'none';
             }
         });
     </script>
