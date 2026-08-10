@@ -469,10 +469,12 @@
                     let html = '';
                     json.data.forEach(item => {
                         // Hiển thị tên sản phẩm và giá tiền (CSS đồng bộ với Dark Theme)
+                        // ĐÃ SỬA: Thêm sự kiện onclick="selectProduct(...)"
                         html += `
                             <div style="padding: 12px 15px; border-bottom: 1px solid #334155; cursor: pointer; transition: 0.2s;" 
                                  onmouseover="this.style.background='#334155'" 
-                                 onmouseout="this.style.background='transparent'">
+                                 onmouseout="this.style.background='transparent'"
+                                 onclick="selectProduct('${item.TenSanPham}')">
                                 <strong style="color: #f8fafc; font-size: 0.95rem;">${item.TenSanPham}</strong><br>
                                 <small style="color: #38bdf8; font-weight: 600; font-size: 0.85rem;">${item.Gia} VNĐ</small>
                             </div>`;
@@ -485,6 +487,23 @@
                 }
             } catch (error) {
                 console.error("Lỗi gọi API tìm kiếm:", error);
+            }
+        }
+
+        // HÀM MỚI: Xử lý khi khách bấm vào sản phẩm trong danh sách
+        function selectProduct(productName) {
+            // 1. Điền tên sản phẩm lên thanh tìm kiếm
+            document.getElementById('aiSearchBox').value = productName;
+            
+            // 2. Ẩn cái bảng xổ xuống đi
+            document.getElementById('suggestBox').style.display = 'none';
+            
+            // 3. Hiện thông báo cho ngầu (Demo)
+            const toast = document.getElementById('toast');
+            if(toast) {
+                toast.innerHTML = `<i class='fa-solid fa-magnifying-glass'></i> Đang tìm: ${productName}`;
+                toast.className = "show";
+                setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
             }
         }
 
