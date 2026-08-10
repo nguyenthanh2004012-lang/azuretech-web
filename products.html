@@ -117,9 +117,8 @@
         </div>
         
         <div class="product-grid">
-            <!-- Product 1 (Đã Tích Hợp Dịch Vụ Azure) -->
+            <!-- Product 1 -->
             <div class="product-card reveal">
-                <!-- AZURE WEB PUBSUB: Realtime Viewers -->
                 <div class="live-badge"><div class="pulse"></div> <span id="viewer-1">12</span> người đang xem</div>
                 
                 <div class="product-img"><img src="img/macbook.svg" alt="Macbook"></div>
@@ -130,7 +129,6 @@
                         <span class="price">$1,999.00</span>
                         <button class="btn-add-cart" data-name="MacBook Pro 14" data-price="1999.00" data-img="img/macbook.svg"><i class="fa-solid fa-plus"></i></button>
                     </div>
-                    <!-- NÚT CHỨC NĂNG AZURE (CỦA GIANG) -->
                     <div class="azure-actions">
                         <button class="btn-azure btn-reader" onclick="startImmersiveReader('title-1', 'Laptop cao cấp trang bị chip M3 siêu tốc.')"><i class="fa-solid fa-book-reader"></i> Đọc AI</button>
                         <button class="btn-azure btn-event" onclick="triggerEventGrid('MacBook Pro 14')"><i class="fa-solid fa-triangle-exclamation"></i> Hết hàng</button>
@@ -139,9 +137,8 @@
                 </div>
             </div>
 
-            <!-- Product 2 (Đã Tích Hợp Dịch Vụ Azure) -->
+            <!-- Product 2 -->
             <div class="product-card reveal">
-                <!-- AZURE WEB PUBSUB: Realtime Viewers -->
                 <div class="live-badge"><div class="pulse"></div> <span id="viewer-2">5</span> người đang xem</div>
 
                 <div class="product-img"><img src="img/dell.svg" alt="Dell XPS"></div>
@@ -152,7 +149,6 @@
                         <span class="price">$1,750.00</span>
                         <button class="btn-add-cart" data-name="Dell XPS 15" data-price="1750.00" data-img="img/dell.svg"><i class="fa-solid fa-plus"></i></button>
                     </div>
-                    <!-- NÚT CHỨC NĂNG AZURE (CỦA GIANG) -->
                     <div class="azure-actions">
                         <button class="btn-azure btn-reader" onclick="startImmersiveReader('title-2', 'Màn hình OLED viền siêu mỏng, hoàn hảo cho đồ họa.')"><i class="fa-solid fa-book-reader"></i> Đọc AI</button>
                         <button class="btn-azure btn-event" onclick="triggerEventGrid('Dell XPS 15')"><i class="fa-solid fa-triangle-exclamation"></i> Hết hàng</button>
@@ -163,52 +159,80 @@
 
             <!-- Product 3 -->
             <div class="product-card reveal">
+                <div class="live-badge"><div class="pulse"></div> <span id="viewer-3">8</span> người đang xem</div>
+
                 <div class="product-img"><img src="img/iphone.svg" alt="Phone"></div>
                 <div class="product-info">
                     <p class="category">Điện thoại</p>
-                    <h3>iPhone 15 Pro Max 256GB</h3>
+                    <h3 id="title-3">iPhone 15 Pro Max 256GB</h3>
                     <div class="price-row">
                         <span class="price">$1,199.00</span>
                         <button class="btn-add-cart" data-name="iPhone 15 Pro Max" data-price="1199.00" data-img="img/iphone.svg"><i class="fa-solid fa-plus"></i></button>
                     </div>
+                    <div class="azure-actions">
+                        <button class="btn-azure btn-reader" onclick="startImmersiveReader('title-3', 'Điện thoại cao cấp với camera zoom quang học 5x, khung titan siêu nhẹ.')"><i class="fa-solid fa-book-reader"></i> Đọc AI</button>
+                        <button class="btn-azure btn-event" onclick="triggerEventGrid('iPhone 15 Pro Max')"><i class="fa-solid fa-triangle-exclamation"></i> Hết hàng</button>
+                        <button class="btn-azure btn-voice" onclick="startVoicePayment()"><i class="fa-solid fa-microphone-lines"></i> Thanh toán giọng nói</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Product 4 -->
+            <!-- Product 4 (Không có nút Hết hàng) -->
             <div class="product-card reveal">
+                <div class="live-badge"><div class="pulse"></div> <span id="viewer-4">3</span> người đang xem</div>
+
                 <div class="product-img"><img src="img/headphones.svg" alt="Headphone"></div>
                 <div class="product-info">
                     <p class="category">Phụ kiện</p>
-                    <h3>Tai nghe Sony WH-1000XM5</h3>
+                    <h3 id="title-4">Tai nghe Sony WH-1000XM5</h3>
                     <div class="price-row">
                         <span class="price">$349.99</span>
                         <button class="btn-add-cart" data-name="Sony WH-1000XM5" data-price="349.99" data-img="img/headphones.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <div class="azure-actions">
+                        <button class="btn-azure btn-reader" style="flex: auto;" onclick="startImmersiveReader('title-4', 'Tai nghe chống ồn chủ động tốt nhất thế giới, âm thanh chuẩn Hi-Res.')"><i class="fa-solid fa-book-reader"></i> Đọc AI</button>
+                        <!-- Giấu nút hết hàng ở đây -->
+                        <button class="btn-azure btn-voice" onclick="startVoicePayment()"><i class="fa-solid fa-microphone-lines"></i> Thanh toán giọng nói</button>
                     </div>
                 </div>
             </div>
             
             <!-- Product 5 -->
             <div class="product-card reveal">
+                <div class="live-badge"><div class="pulse"></div> <span id="viewer-5">15</span> người đang xem</div>
+
                 <div class="product-img"><img src="img/watch.svg" alt="Watch"></div>
                 <div class="product-info">
                     <p class="category">Phụ kiện</p>
-                    <h3>Apple Watch Ultra 2</h3>
+                    <h3 id="title-5">Apple Watch Ultra 2</h3>
                     <div class="price-row">
                         <span class="price">$799.00</span>
                         <button class="btn-add-cart" data-name="Apple Watch Ultra 2" data-price="799.00" data-img="img/watch.svg"><i class="fa-solid fa-plus"></i></button>
                     </div>
+                    <div class="azure-actions">
+                        <button class="btn-azure btn-reader" onclick="startImmersiveReader('title-5', 'Đồng hồ thông minh siêu bền bỉ dành riêng cho thể thao mạo hiểm.')"><i class="fa-solid fa-book-reader"></i> Đọc AI</button>
+                        <button class="btn-azure btn-event" onclick="triggerEventGrid('Apple Watch Ultra 2')"><i class="fa-solid fa-triangle-exclamation"></i> Hết hàng</button>
+                        <button class="btn-azure btn-voice" onclick="startVoicePayment()"><i class="fa-solid fa-microphone-lines"></i> Thanh toán giọng nói</button>
+                    </div>
                 </div>
             </div>
             
-            <!-- Product 6 -->
+            <!-- Product 6 (Không có nút Hết hàng) -->
             <div class="product-card reveal">
+                <div class="live-badge"><div class="pulse"></div> <span id="viewer-6">6</span> người đang xem</div>
+
                 <div class="product-img"><img src="img/charger.svg" alt="Charger"></div>
                 <div class="product-info">
                     <p class="category">Phụ kiện</p>
-                    <h3>Sạc nhanh GaN 100W</h3>
+                    <h3 id="title-6">Sạc nhanh GaN 100W</h3>
                     <div class="price-row">
                         <span class="price">$59.00</span>
                         <button class="btn-add-cart" data-name="Sạc nhanh GaN 100W" data-price="59.00" data-img="img/charger.svg"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+                    <div class="azure-actions">
+                        <button class="btn-azure btn-reader" style="flex: auto;" onclick="startImmersiveReader('title-6', 'Sạc siêu nhanh, kích thước nhỏ gọn nhờ công nghệ GaN tiên tiến.')"><i class="fa-solid fa-book-reader"></i> Đọc AI</button>
+                        <!-- Giấu nút hết hàng ở đây -->
+                        <button class="btn-azure btn-voice" onclick="startVoicePayment()"><i class="fa-solid fa-microphone-lines"></i> Thanh toán giọng nói</button>
                     </div>
                 </div>
             </div>
@@ -264,7 +288,7 @@
     
     <!-- SCRIPT CHO 4 DỊCH VỤ AZURE CỦA GIANG (ĐÃ CHE KEY ĐỂ PUSH LÊN GITHUB) -->
     <script>
-        // CẤU HÌNH KEY/ENDPOINT (Đã giấu 1 phần để qua mặt GitHub Secret Scanning)
+        // CẤU HÌNH KEY/ENDPOINT
         const AZURE_CONFIG = {
             IMMERSIVE_READER: { endpoint: "https://read-azuretech.cognitiveservices.azure.com/", tenantId: "799a10df-adf8-40a1-8f81-e94b29f318d7" },
             SPEECH_SERVICE: { key: "4cR7JNAoeCnoZwY102AEG305bLsz...[HIDDEN_FOR_SECURITY]", region: "southeastasia" },
@@ -272,7 +296,7 @@
             WEB_PUBSUB: { connection: "Endpoint=https://pubsub-azure.webpubsub.azure.com;AccessKey=Fk7roSpnDI7Gpf5aU3iQU...[HIDDEN];Version=1.0;" }
         };
 
-        // 1. AZURE IMMERSIVE READER (Đọc siêu tốc cho người loạn chữ/khiếm thị)
+        // 1. AZURE IMMERSIVE READER
         function startImmersiveReader(titleId, description) {
             const title = document.getElementById(titleId).innerText;
             const toast = document.getElementById('toast');
@@ -283,7 +307,6 @@
             
             console.log(`[Immersive Reader] Target Endpoint: ${AZURE_CONFIG.IMMERSIVE_READER.endpoint}`);
             
-            // Web Speech API mô phỏng hành động đọc văn bản của Azure
             setTimeout(() => {
                 const utterance = new SpeechSynthesisUtterance(`${title}. ${description}`);
                 utterance.lang = 'vi-VN';
@@ -291,7 +314,7 @@
             }, 1000);
         }
 
-        // 2. AZURE EVENT GRID (Báo động hết hàng)
+        // 2. AZURE EVENT GRID 
         function triggerEventGrid(productName) {
             const toast = document.getElementById('toast');
             toast.innerHTML = "<i class='fa-solid fa-satellite-dish'></i> Đang đẩy tín hiệu lên Azure Event Grid...";
@@ -305,7 +328,7 @@
             }, 1500);
         }
 
-        // 3. AZURE SPEAKER RECOGNITION (Thanh toán bằng sinh trắc giọng nói)
+        // 3. AZURE SPEAKER RECOGNITION 
         function startVoicePayment() {
             const modal = document.getElementById('voiceModal');
             const mic = document.getElementById('micIcon');
@@ -322,7 +345,6 @@
                 mic.classList.add('mic-listening');
                 console.log(`[Speaker Recognition] Region: ${AZURE_CONFIG.SPEECH_SERVICE.region}`);
 
-                // Giả lập xử lý AI nhận diện sóng âm
                 setTimeout(() => {
                     mic.classList.remove('mic-listening');
                     status.innerText = "✅ Sinh trắc học trùng khớp! Duyệt thanh toán.";
@@ -336,12 +358,16 @@
             document.getElementById('voiceModal').style.display = 'none';
         }
 
-        // 4. AZURE WEB PUBSUB (Mô phỏng dữ liệu Real-time số người xem)
+        // 4. AZURE WEB PUBSUB (Mô phỏng dữ liệu Real-time cho TOÀN BỘ 6 SẢN PHẨM)
         setInterval(() => {
-            const v1 = Math.floor(Math.random() * 10) + 5; // Nhảy từ 5 - 14
-            const v2 = Math.floor(Math.random() * 5) + 2;  // Nhảy từ 2 - 6
-            document.getElementById('viewer-1').innerText = v1;
-            document.getElementById('viewer-2').innerText = v2;
+            for(let i = 1; i <= 6; i++) {
+                const viewerEl = document.getElementById('viewer-' + i);
+                if(viewerEl) {
+                    // Tạo số lượng người xem ngẫu nhiên cho từng cái
+                    const randomViewers = Math.floor(Math.random() * 15) + (2 + i);
+                    viewerEl.innerText = randomViewers;
+                }
+            }
         }, 3500);
     </script>
 
