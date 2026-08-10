@@ -560,6 +560,27 @@
 </div>
 
 <script>
+    // Bắt sự kiện click cho toàn bộ nút bấm Mua Hàng (nút dấu +)
+document.querySelectorAll('.btn-add-cart').forEach(button => {
+    button.addEventListener('click', async function() {
+        // Lấy tên sản phẩm từ thuộc tính data-name của nút
+        const productName = this.getAttribute('data-name');
+        
+        // Gọi API Backend của Lâm để kích hoạt SignalR
+        try {
+            await fetch('https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api/trigger-buy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ productName: productName })
+            });
+        } catch (err) {
+            console.error("Lỗi gọi SignalR:", err);
+        }
+    });
+});
+
 const connection = new signalR.HubConnectionBuilder()
     .withUrl("https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api/signalr")
     .withAutomaticReconnect()
