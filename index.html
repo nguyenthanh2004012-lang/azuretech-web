@@ -376,10 +376,15 @@ const connection = new signalR.HubConnectionBuilder()
     .build();
 
 connection.on("receiveNotification", (message) => {
+    // In ra F12 để kiểm chứng tín hiệu đã tới trình duyệt
+    console.log("🔥 TÍN HIỆU TỪ MÂY ĐÃ VỀ:", message);
+    
     const toast = document.getElementById('liveToast');
     document.getElementById('toastMessage').innerText = message;
     
+    // Ép hiển thị đè lên mọi element khác
     toast.style.display = 'block';
+    toast.style.zIndex = '999999';
     toast.style.opacity = '1';
 
     setTimeout(() => {
@@ -388,7 +393,9 @@ connection.on("receiveNotification", (message) => {
     }, 4000);
 });
 
-connection.start().catch(err => console.error("Lỗi SignalR:", err));
+connection.start()
+    .then(() => console.log("✅ Đã kết nối SignalR thành công!"))
+    .catch(err => console.error("Lỗi SignalR:", err));
 </script>
 </body>
 </html>
