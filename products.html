@@ -551,5 +551,34 @@
             }
         });
     </script>
+    <!-- Thư viện Microsoft SignalR -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+
+<!-- Khung Giao diện Popup thông báo -->
+<div id="liveToast" style="position: fixed; bottom: 20px; right: 20px; background: #28a745; color: white; padding: 15px 25px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); display: none; z-index: 9999; font-family: sans-serif; transition: opacity 0.5s;">
+    <span id="toastMessage"></span>
+</div>
+
+<script>
+const connection = new signalR.HubConnectionBuilder()
+    .withUrl("https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api/signalr")
+    .withAutomaticReconnect()
+    .build();
+
+connection.on("receiveNotification", (message) => {
+    const toast = document.getElementById('liveToast');
+    document.getElementById('toastMessage').innerText = message;
+    
+    toast.style.display = 'block';
+    toast.style.opacity = '1';
+
+    setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.style.display = 'none', 500);
+    }, 4000);
+});
+
+connection.start().catch(err => console.error("Lỗi SignalR:", err));
+</script>
 </body>
 </html>
