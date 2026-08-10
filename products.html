@@ -449,10 +449,16 @@
     </script>
     
     <!-- SCRIPT TÌM KIẾM AI (CỦA LÂM) -->
+   <!-- SCRIPT TÌM KIẾM AI (CỦA LÂM) + CHỨC NĂNG LỌC -->
     <script>
         async function autoSuggest() {
             const query = document.getElementById('aiSearchBox').value;
             const suggestBox = document.getElementById('suggestBox');
+
+            // Khách xóa hết chữ thì tự động hiện lại toàn bộ sản phẩm
+            if(query.trim() === '') {
+                filterProducts('');
+            }
 
             // Khách gõ từ 2 chữ trở lên mới bắt đầu tìm
             if(query.length < 2) {
@@ -468,8 +474,6 @@
                 if(json.success && json.data.length > 0) {
                     let html = '';
                     json.data.forEach(item => {
-                        // Hiển thị tên sản phẩm và giá tiền (CSS đồng bộ với Dark Theme)
-                        // ĐÃ SỬA: Thêm sự kiện onclick="selectProduct(...)"
                         html += `
                             <div style="padding: 12px 15px; border-bottom: 1px solid #334155; cursor: pointer; transition: 0.2s;" 
                                  onmouseover="this.style.background='#334155'" 
@@ -490,7 +494,7 @@
             }
         }
 
-        // HÀM MỚI: Xử lý khi khách bấm vào sản phẩm trong danh sách
+        // KHI KHÁCH CLICK CHỌN SẢN PHẨM TRÊN BẢNG GỢI Ý
         function selectProduct(productName) {
             // 1. Điền tên sản phẩm lên thanh tìm kiếm
             document.getElementById('aiSearchBox').value = productName;
@@ -498,14 +502,45 @@
             // 2. Ẩn cái bảng xổ xuống đi
             document.getElementById('suggestBox').style.display = 'none';
             
-            // 3. Hiện thông báo cho ngầu (Demo)
+            // 3. Hiện thông báo
             const toast = document.getElementById('toast');
             if(toast) {
-                toast.innerHTML = `<i class='fa-solid fa-magnifying-glass'></i> Đang tìm: ${productName}`;
+                toast.innerHTML = `<i class='fa-solid fa-filter'></i> Đã lọc: ${productName}`;
                 toast.className = "show";
                 setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
             }
+
+            // 4. Lọc lưới sản phẩm bên dưới
+            filterProducts(productName);
         }
+
+        // HÀM LỌC: Ẩn/hiện thẻ div sản phẩm dựa vào tên
+        function filterProducts(query) {
+            query = query.toLowerCase().trim();
+            const productCards = document.querySelectorAll('.product-card');
+
+            productCards.forEach(card => {
+                // Tìm thẻ h3 chứa tên sản phẩm bên trong mỗi card
+                const titleElement = card.querySelector('.product-info h3');
+                if (titleElement) {
+                    const title = titleElement.innerText.toLowerCase();
+                    // Nếu tên sản phẩm có chứa từ khóa tìm kiếm (hoặc ô tìm kiếm trống) thì hiện, ngược lại thì ẩn
+                    if (title.includes(query) || query === '') {
+                        card.style.display = 'block'; // Cho hiện lại
+                    } else {
+                        card.style.display = 'none';  // Ẩn đi
+                    }
+                }
+            });
+        }
+
+        // Cho phép ấn Enter để lọc luôn mà không cần click chuột
+        document.getElementById('aiSearchBox').addEventListener('keypress', function(e) {
+            if(e.key === 'Enter') {
+                filterProducts(this.value);
+                document.getElementById('suggestBox').style.display = 'none';
+            }
+        });
 
         // Tự động ẩn hộp tìm kiếm khi click ra ngoài màn hình
         document.addEventListener('click', function(event) {
