@@ -99,7 +99,7 @@
             <span style="font-size: 1.8rem; font-weight: 700;">AzureTech</span>
         </a>
         <h2>Hệ Thống Xác Thực</h2>
-        <p>Quản lý định danh (Azure Active Directory B2C)</p>
+        <p>Quản lý định danh (Microsoft Entra ID & B2C)</p>
         
         <div class="auth-tabs" id="tabs-container">
             <button class="auth-tab active" onclick="switchTab('login')">Đăng Nhập</button>
@@ -153,14 +153,40 @@
         
         <div id="social-login">
             <div class="divider">HOẶC</div>
-            <button class="btn-sso">
+            <!-- ĐÃ SỬA THEO YÊU CẦU CỦA TÚ: Đổi nút <button> thành thẻ <a> chứa link Microsoft -->
+            <a href="https://login.microsoftonline.com/799a10df-adf8-40a1-8f81-e94b29f318d7/oauth2/v2.0/authorize?client_id=2f3b28b0-2750-4157-aefb-9ebca70fa9b2&response_type=id_token&redirect_uri=https://mango-mud-091da3100.7.azurestaticapps.net/login.html&scope=openid&response_mode=fragment&nonce=demo123" class="btn-sso" style="text-decoration: none;">
                 <i class="fa-brands fa-microsoft" style="color: #00a4ef;"></i> Đăng nhập với Microsoft
-            </button>
+            </a>
         </div>
     </div>
 
     <script>
         const statusText = document.getElementById('auth-status');
+
+        // ĐÃ SỬA THEO YÊU CẦU CỦA TÚ: Đoạn code bắt token từ Microsoft
+        window.onload = function() {
+            const hash = window.location.hash.substring(1);
+            const params = new URLSearchParams(hash);
+            const idToken = params.get('id_token');
+            
+            if (idToken) {
+                // Lưu token vào localStorage
+                localStorage.setItem('ms_token', idToken);
+                
+                // Giao diện: Ẩn các form đi và báo thành công
+                document.getElementById('tabs-container').style.display = 'none';
+                document.querySelectorAll('.form-container').forEach(f => f.style.display = 'none');
+                document.getElementById('social-login').style.display = 'none';
+                
+                statusText.style.color = "#16a34a";
+                statusText.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đăng nhập Microsoft thành công! Đang vào hệ thống...';
+                
+                // chuyển hướng sang trang chủ sau 1.5 giây
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            }
+        };
 
         // Hàm chuyển đổi tab giao diện
         function switchTab(tab) {
