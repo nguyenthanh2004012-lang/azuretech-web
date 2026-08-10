@@ -350,52 +350,51 @@
 
 <script>
     // Bắt sự kiện click cho toàn bộ nút bấm Mua Hàng (nút dấu +)
-document.querySelectorAll('.btn-add-cart').forEach(button => {
-    button.addEventListener('click', async function() {
-        // Lấy tên sản phẩm từ thuộc tính data-name của nút
-        const productName = this.getAttribute('data-name');
-        
-        // Gọi API Backend của Lâm để kích hoạt SignalR
-        try {
-            await fetch('https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api/trigger-buy', {
+    document.querySelectorAll('.btn-add-cart').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault(); // Chặn hành vi mặc định
+            
+            const productName = this.getAttribute('data-name');
+            
+            // Gọi API và thả trôi (không dùng await) để web không bị đơ
+            fetch('https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api/trigger-buy', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ productName: productName })
             });
-        } catch (err) {
-            console.error("Lỗi gọi SignalR:", err);
-        }
+
+            // Nhảy thẳng về trang chủ (index.html) lập tức
+            window.location.href = "index.html"; 
+        });
     });
-});
 
-const connection = new signalR.HubConnectionBuilder()
-    .withUrl("https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api/signalr")
-    .withAutomaticReconnect()
-    .build();
+    // CẤU HÌNH SIGNALR ĐỂ NHẬN THÔNG BÁO TỪ MÂY
+    const connection = new signalR.HubConnectionBuilder()
+        .withUrl("https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api/signalr")
+        .withAutomaticReconnect()
+        .build();
 
-connection.on("receiveNotification", (message) => {
-    // In ra F12 để kiểm chứng tín hiệu đã tới trình duyệt
-    console.log("🔥 TÍN HIỆU TỪ MÂY ĐÃ VỀ:", message);
-    
-    const toast = document.getElementById('liveToast');
-    document.getElementById('toastMessage').innerText = message;
-    
-    // Ép hiển thị đè lên mọi element khác
-    toast.style.display = 'block';
-    toast.style.zIndex = '999999';
-    toast.style.opacity = '1';
+    connection.on("receiveNotification", (message) => {
+        // In ra F12 để kiểm chứng tín hiệu đã tới trình duyệt
+        console.log("🔥 TÍN HIỆU TỪ MÂY ĐÃ VỀ:", message);
+        
+        const toast = document.getElementById('liveToast');
+        document.getElementById('toastMessage').innerText = message;
+        
+        // Ép hiển thị đè lên mọi element khác
+        toast.style.display = 'block';
+        toast.style.zIndex = '999999';
+        toast.style.opacity = '1';
 
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.style.display = 'none', 500);
-    }, 4000);
-});
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.style.display = 'none', 500);
+        }, 4000);
+    });
 
-connection.start()
-    .then(() => console.log("✅ Đã kết nối SignalR thành công!"))
-    .catch(err => console.error("Lỗi SignalR:", err));
+    connection.start()
+        .then(() => console.log("✅ Đã kết nối SignalR thành công!"))
+        .catch(err => console.error("Lỗi SignalR:", err));
 </script>
 </body>
 </html>
