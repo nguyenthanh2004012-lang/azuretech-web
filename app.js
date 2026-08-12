@@ -653,3 +653,39 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// === CHỨC NĂNG SIGNALR (ĐÃ ĐỔI LINK API CỦA LÂM) ===
+window.addEventListener('DOMContentLoaded', () => {
+    if (typeof signalR !== 'undefined') {
+        const connection = new signalR.HubConnectionBuilder()
+            // Đã đổi sang link API của Lâm
+            .withUrl("https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api") 
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        // Hàm bật popup
+        function showSignalRPopup(message) {
+            console.log("📢 Nhận được tín hiệu:", message);
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.innerText = message;
+                toast.classList.add('show');
+                toast.style.background = "#28a745"; 
+                setTimeout(() => { toast.classList.remove('show'); }, 5000);
+            } else {
+                alert(message);
+            }
+        }
+
+        // Đón lõng tất cả các tên sự kiện phổ biến mà Lâm có thể đặt
+        connection.on("newMessage", showSignalRPopup);
+        connection.on("ReceiveMessage", showSignalRPopup);
+        connection.on("Notify", showSignalRPopup);
+        connection.on("OrderAlert", showSignalRPopup);
+
+        connection.start().then(function () {
+            console.log("✅ Đã kết nối SignalR API của Lâm thành công!");
+        }).catch(function (err) {
+            console.error("❌ Lỗi kết nối SignalR:", err.toString());
+        });
+    }
+});
