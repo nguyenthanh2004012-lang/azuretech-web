@@ -653,3 +653,35 @@ window.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+// === CHỨC NĂNG SIGNALR NHẬN POPUP (CHUẨN EVENT NAME) ===
+window.addEventListener('DOMContentLoaded', () => {
+    if (typeof signalR !== 'undefined') {
+        const connection = new signalR.HubConnectionBuilder()
+            // Trỏ đúng tới route /api/signalr để nó tự gọi /negotiate của ông
+            .withUrl("https://api-chatbot-lam-2026-cqa6fdcdg5f9b0h2.southeastasia-01.azurewebsites.net/api/signalr") 
+            .configureLogging(signalR.LogLevel.Information)
+            .build();
+
+        // Lắng nghe đúng tên sự kiện receiveNotification từ code Backend
+        connection.on("receiveNotification", function (message) { 
+            console.log("📢 Nhận được tín hiệu từ Azure:", message);
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.innerText = message;
+                toast.classList.add('show');
+                toast.style.background = "#28a745"; // Nền xanh lá báo thành công
+                setTimeout(() => { toast.classList.remove('show'); }, 5000);
+            } else {
+                alert(message);
+            }
+        });
+
+        connection.start().then(function () {
+            console.log("✅ Đã kết nối SignalR thành công! Đang đợi đơn hàng...");
+        }).catch(function (err) {
+            console.error("❌ Lỗi kết nối SignalR:", err.toString());
+        });
+    } else {
+        console.warn("⚠️ Báo Frontend: Chưa chèn link thư viện SignalR vào file index.html kìa!");
+    }
+});
