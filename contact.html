@@ -10,7 +10,7 @@
     <!-- CSS dùng chung của hệ thống (Dark Theme) -->
     <link rel="stylesheet" href="styles.css">
     
-    <!-- THƯ VIỆN BẢN ĐỒ (Dùng cái này để "Tạo Ảo") -->
+    <!-- THƯ VIỆN BẢN ĐỒ (Leaflet) -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -39,7 +39,12 @@
         /* CHIÊU 1: Giấu nhẹm logo và bản quyền của thư viện bên thứ 3 đi */
         .leaflet-control-attribution { display: none !important; }
         
-        /* CHIÊU 2: Tạo cái ghim (Marker) giả lập phong cách UI của Azure */
+        /* CHIÊU 2: Nhấn chìm bản đồ sáng thành bản đồ Dark Theme cực ngầu */
+        .leaflet-layer {
+            filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+        }
+
+        /* Tạo cái ghim (Marker) giả lập phong cách UI của Azure */
         .azure-mock-marker {
             background: #38bdf8; 
             color: #0f172a; 
@@ -143,7 +148,7 @@
         </div>
     </footer>
 
-    <!-- SCRIPT BẢN ĐỒ & XỬ LÝ FORM (DÙNG API FORMSPREE) -->
+    <!-- SCRIPT BẢN ĐỒ & XỬ LÝ FORM -->
     <script>
         // Xử lý nút Gửi yêu cầu qua API Formspree
         async function submitForm(e) {
@@ -151,18 +156,15 @@
             const btn = document.getElementById('btnSend');
             const status = document.getElementById('formStatus');
             
-            // Lấy dữ liệu từ Form
             const nameData = document.getElementById('name').value;
             const emailData = document.getElementById('email').value;
             const messageData = document.getElementById('message').value;
             
-            // Hiệu ứng Loading
             btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi lên Server...';
             btn.disabled = true;
             btn.style.opacity = '0.7';
 
             try {
-                // Gọi API của Formspree mà ông cung cấp
                 const response = await fetch('https://formspree.io/f/mdenebwg', {
                     method: 'POST',
                     headers: {
@@ -177,12 +179,10 @@
                 });
 
                 if (response.ok) {
-                    // Nếu Formspree báo OK -> Hiện thông báo thành công
                     btn.style.display = 'none';
                     status.style.display = 'block';
                     document.getElementById('supportForm').reset();
                 } else {
-                    // Nếu có lỗi (ví dụ hết lượt free)
                     alert("Có lỗi xảy ra từ Server. Vui lòng thử lại sau!");
                     btn.innerHTML = '<i class="fa-regular fa-paper-plane"></i> Gửi Yêu Cầu';
                     btn.disabled = false;
@@ -197,15 +197,15 @@
             }
         }
 
-        // Khởi tạo bản đồ ảo Azure Maps
+        // Khởi tạo bản đồ ảo Azure Maps (Đã đổi nguồn sang Google Maps chuẩn VN)
         function initAzureMapsMock() {
             // Tọa độ Đại học Đồng Tháp
             var map = L.map('azureMapContainer', {
                 zoomControl: false 
-            }).setView([10.4630, 105.6320], 15);
+            }).setView([10.4630, 105.6320], 15); // Có thể zoom out (số nhỏ hơn) để thấy Biển Đông rõ hơn
 
-            // Lớp bản đồ Dark Mode
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            // SỬ DỤNG GOOGLE MAPS TILE ĐỊNH VỊ VÙNG VIỆT NAM (gl=VN) ĐỂ ĐẢM BẢO CHỦ QUYỀN
+            L.tileLayer('https://mt1.google.com/vt/lyrs=m&x={x}&y={y}&z={z}&hl=vi&gl=VN', {
                 maxZoom: 19
             }).addTo(map);
 
